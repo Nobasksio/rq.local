@@ -1,0 +1,71 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Инжиниринг категорий{% endblock %}
+
+{% block body %}
+    <div class='zag1' >
+        Инжиниринг: Категории
+    </div >
+{% block menu_cat %}
+    {{ include('inginiring/_menu.html.twig') }}
+{% endblock %}
+    <div class='pzag' >
+        Начнем с малого. Ниже приведен список категорий, который будет в вашем меню. Вы можете добавить, отредактировать
+        или удалить любую.
+
+    </div >
+    <table class='table_order' border="0" cellpadding="0" cellspacing="0" >
+        <tr class='th_order_table' >
+            <td class='tdz_ord_table' ></td >
+            <td class='tdz_ord_table' >Название<br > категории</td >
+            <td class='tdz_ord_table' >Кухня<br >или бар?</td >
+            <!--<td class='tdz_ord_table'>Титульная<br> категория? </td>-->
+            <td class='tdz_ord_table' ></td >
+            <td class='tdz_ord_table' ></td >
+        </tr >
+        {% for category in categories %}
+        <tr class='tr_order3' id='tr{{ category.id }}' >
+            <td class='td_ord_table' id='num{{ category.id }}' >{{ loop.index }}</td >
+            <td class='td_ord_group' id='name_tr{{ category.id }}' >{{ category.name }}</td >
+            <td class='td_ord_table' id='name_tr$id_cat' >
+                <div class='controlgroup' >
+                    <label for='kitch{{ category.id }}' onclick='type_cat({{ project.id }},{{ category.id }},1)' >К</label >
+                    <input type='radio' class='type_cat_class' name='type_cat{{ category.id }}' {% if category.type==1  %}checked{% endif %} id='kitch{{ category.id }}' >
+                    <label for='bar{{ category.id }}' onclick='type_cat({{ project.id }},{{ category.id }},2)' >Б</label >
+                    <input type='radio' class='type_cat_class' name='type_cat{{ category.id }}' {% if category.type==2  %}checked{% endif %}  id='bar{{ category.id }}' >
+                    <div class='help' ></div >
+                </div >
+            </td >
+
+            <td class='td_ord_table' id='edit_tr{{ category.id }}' onclick='readactcat({{ project.id }},{{ category.id }})' ><span class='redact_grey2_smal'
+                                                                                              id='edit{{ category.id }}' >ред.</span >
+            </td >
+            <td class='td_ord_table' id='del_tr{{ category.id }}' onclick='delcat({{ project.id }},{{ category.id }})' ><span class='redact_grey2_smal'
+                                                                                           id='del{{ category.id }}' >X</span >
+            </td >
+        </tr >
+        {% endfor %}
+        <tr class='tr_order2 ' id='end_tr' >
+            <td class='td_ord_table' ></td >
+            <td class='td_ord_table_medium left' colspan="4" ><input type='text' class='input_min142' id='nameb' ></td >
+            <!--<td class='td_ord_table'><input type='checkbox'  value=''></td>-->
+
+
+        </tr >
+        <tr class='tr_order2' >
+            <td class='td_ord_table' ></td >
+            <td class='td_ord_table_medium left' colspan="4" onclick='addcat({{ project.id }})' id='addbl' >
+                <span class='add_yet_in_td' id='edit' >+ добавить категорию</span >
+
+            </td >
+
+        </tr >
+    </table >
+
+    <div class='buton' onclick='done_cat()' >
+        Утвердить категории
+    </div >
+    <div class='ok_done' id='ok_done2' >Категории успешно утверждены. <br >
+        <A href='ing_dish_for_cat.php' >Перейти дальше</A >
+    </div >
+{% endblock %}

@@ -1,0 +1,11 @@
+<div class='menu new_str0'>
+    <a href='{{ path('ing_cat',{'project_id': project.id}) }}' class='menul $activ_2[0]'><span>Настройка категорий</span></a>
+    <a href='{{ path('count_dish', {'project_id': project.id}) }}' class='menul $activ_2[1]'><span>Количество блюд</span></a>
+    <a href='{{ path('price_cost_manage', {'project_id': project.id}) }}' class='menul $activ_2[2]'><span >Управление себестоимостью</span></a>
+    <a href='{{ path('price_cat', {'project_id': project.id}) }}' class='menul $activ_2[3]'><span >Управление ценой</span></a>
+    <a href='{{ path('make_tz', {'project_id': project.id}) }}' class='menul $activ_2[4]'><span >Техническое задание повару</span></a>
+</div>
+
+{% block tailjs %}
+
+{% endblock %}

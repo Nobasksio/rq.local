@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class='kotopes'>
+    <div class='gav'>
+        <div class='menul2 left'>
+            <a href='login' class='menu_out'>Вход</a>
+        </div>
+        <div class='zag1'>
+            Resto-quest.ru
+        </div>
+        <div class='pzag'>
+
+            Сервис для организации разработки меню ресторана.
+        </div>
+    </div>
+    <div class='myau'>
+        <div class='zag12'>
+
+            Все ок. добавили {{ count }} элементов
+        </div>
+
+
+    </div>
+</div>
+<a href='#' ><div id="b"></div></a>
+<div class='loader' id='loader'><img src='loading.gif'></div>
+{% endblock  %}
+
+{% block tailjs %}
+<script type="text/javascript">
+    $( function() {
+        $( "[type=radio]" ).checkboxradio({
+            icon: false
+        });
+    });
+    function swich_cat(id_what){
+        $("[id ^= 'what_blc']").each(function(indx,element){
+            $(element).hide();
+        });
+        $("#what_blc"+id_what).show('blind',500);
+
+    }
+    function bonvoyage(){
+        var  mail_s=$("#mail_s").val();
+        showb();
+        if (mail_s==""){
+            hideb();
+            $("#ok_done2").html("Вы забыли ввести email");
+            $("#ok_done2").show('bounce');
+            hideb();
+            ga ('send', 'event', 'order_error', 'try_eror');
+            yaCounter48874154.reachGoal('error_try');
+
+        }
+        else{
+            $.ajax({
+                url: 'ajax/save_mail_aj.php',
+                data:'mail_s='+mail_s,
+                dataType: "text",
+                success: function(data){
+
+                    if ( data==1){
+                        $("#ok_done2").show('blind');
+                        ga ('send', 'event', 'order_ok', 'try');
+                        yaCounter48874154.reachGoal('ok_try');
+                    }
+                    else{
+                        $("#ok_done2").html(data);
+                        $("#ok_done2").show('blind',500);
+                        ga ('send', 'event', 'order_error', 'try_eror');
+                        yaCounter48874154.reachGoal('error_try');
+
+                    }
+                    hideb();
+                }
+
+
+            })
+        }
+
+    }
+
+
+
+    window.onload = function()
+    {
+        a = document.getElementById("a");
+        b = document.getElementById("b");
+
+
+        c= document.getElementById("c");
+        d= document.getElementById("d");
+        subm=document.getElementById("subm");
+
+        h= document.getElementById("logregtype");
+    }
+
+    function showb()
+    {
+//Задаем прозрачность и блокируем дисплей
+//элемента "b"
+        b.style.filter = "alpha(opacity=80)";
+        b.style.opacity = 0.8;
+        b.style.display = "block";
+        $("#loader").show();
+
+    }
+    function hideb()
+    {
+//Задаем прозрачность и блокируем дисплей
+//элемента "b"
+        b.style.display = "none";
+        $("#loader").hide();
+    }
+
+
+</script>
+<? include "jivo.php"; ?>
+{% endblock  %}

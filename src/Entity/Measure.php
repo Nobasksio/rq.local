@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utility\EntityHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MeasureRepository")
  */
-class Measure
+class Measure extends EntityHelper
 {
     /**
      * @ORM\Id()
@@ -32,6 +33,11 @@ class Measure
      * @ORM\OneToMany(targetEntity="App\Entity\TtkComponent", mappedBy="measure")
      */
     private $ttkComponents;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $iiko_id;
 
     public function __construct() {
         $this->setActive(true);
@@ -94,6 +100,32 @@ class Measure
                 $ttkComponent->setMeasure(null);
             }
         }
+
+        return $this;
+    }
+    public function getArrayParam($array = ['id','name']){
+
+        $array_param = [];
+
+        foreach ($array as $name_property){
+            if (isset($this->$name_property)){
+
+                $array_param[$name_property] = $this->$name_property;
+            }
+        }
+        return $array_param;
+
+
+    }
+
+    public function getIikoId(): ?string
+    {
+        return $this->iiko_id;
+    }
+
+    public function setIikoId(?string $iiko_id): self
+    {
+        $this->iiko_id = $iiko_id;
 
         return $this;
     }

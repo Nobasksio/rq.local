@@ -5,11 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Utility\EntityHelper;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
-class Product
+class Product extends EntityHelper
 {
     /**
      * @ORM\Id()
@@ -91,6 +92,21 @@ class Product
      */
     private $old_status;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\NameMenu", mappedBy="product")
+     */
+    private $namesMenu;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DescriptionMenu", mappedBy="Product")
+     */
+    private $DescritionsMenu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\TypeProduct", inversedBy="products")
+     */
+    private $type;
+
     public function __construct() {
         $this->setPrice(0);
         $this->setStatus(true);
@@ -101,6 +117,8 @@ class Product
         $this->degustationScores = new ArrayCollection();
         $this->active = new ArrayCollection();
         $this->photos = new ArrayCollection();
+        $this->namesMenu = new ArrayCollection();
+        $this->DescritionsMenu = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -336,5 +354,93 @@ class Product
     public function setOldStatus($old_status)
     {
         $this->old_status = $old_status;
+    }
+
+    /**
+     * @return Collection|NameMenu[]
+     */
+    public function getNamesMenu(): Collection
+    {
+        return $this->namesMenu;
+    }
+
+    public function addNamesMenu(NameMenu $namesMenu): self
+    {
+        if (!$this->namesMenu->contains($namesMenu)) {
+            $this->namesMenu[] = $namesMenu;
+            $namesMenu->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNamesMenu(NameMenu $namesMenu): self
+    {
+        if ($this->namesMenu->contains($namesMenu)) {
+            $this->namesMenu->removeElement($namesMenu);
+            // set the owning side to null (unless already changed)
+            if ($namesMenu->getProduct() === $this) {
+                $namesMenu->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DescriptionMenu[]
+     */
+    public function getDescritionsMenu(): Collection
+    {
+        return $this->DescritionsMenu;
+    }
+
+    public function addDescritionsMenu(DescriptionMenu $descritionsMenu): self
+    {
+        if (!$this->DescritionsMenu->contains($descritionsMenu)) {
+            $this->DescritionsMenu[] = $descritionsMenu;
+            $descritionsMenu->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDescritionsMenu(DescriptionMenu $descritionsMenu): self
+    {
+        if ($this->DescritionsMenu->contains($descritionsMenu)) {
+            $this->DescritionsMenu->removeElement($descritionsMenu);
+            // set the owning side to null (unless already changed)
+            if ($descritionsMenu->getProduct() === $this) {
+                $descritionsMenu->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getType(): ?TypeProduct
+    {
+        return $this->type;
+    }
+
+    public function setType(?TypeProduct $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getArrayParam($array = ['id','name_work']){
+
+        $array_param = [];
+
+        foreach ($array as $name_property){
+            if (isset($this->$name_property)){
+                $array_param[$name_property] = $this->$name_property;
+            }
+        }
+        return $array_param;
+
+
     }
 }

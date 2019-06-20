@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Project{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'id': 'new_project'}} ) }}
+
+    <div class='zag1'>
+        Создание нового проекта
+    </div>
+    <div class='pzag'>
+        Добро пожаловать! Вы на правильном пути, дорогой друг) После завершения этого квеста вы узнаете как в идеальном виде
+        должна строится работа
+        по разработке меню ресторана, а так же прокачаете свою команду или подберете новую.<br>
+        Ну приступим.
+    </div>
+
+    <div class="alert alert-danger">
+        {{ form_errors(form) }}
+    </div>
+    <div class='new_str'>
+        <div class='name_input'>
+            {{ form_label(form.project_name, 'Название проекта') }}
+        </div>
+        <div>
+            {{ form_widget(form.project_name, {'attr': {'class': 'input_medium'}}) }}
+        </div>
+    </div>
+    <div class='new_str'>
+        <div class='float'>
+            <div class='name_input'>
+                Кухня
+            </div>
+            <div>
+                <input type='text' class='input_medium' id='kitchen_project' value=''>
+            </div>
+        </div>
+        <div class='blc_float_input_comment'>
+            Например Японская, Европейская или любая другая. Это поможет нам подобрать для вас максимально полезные советы.
+        </div>
+        <div class='help'></div>
+    </div>
+
+    <div class='new_str'>
+        <div class='float'>
+            <div class='name_input'>
+                Формат заведения
+            </div>
+            <div>
+                {{ form_widget(form.kitchen_type, {'attr': {'class': 'input_medium'}}) }}
+            </div>
+        </div>
+        <div class='blc_float_input_comment'>
+            Бар, ресторан, кафе и др. Разные форматы предполагают разный подход.
+        </div>
+        <div class='help'></div>
+    </div>
+    <div class='new_str'>
+        <div class='float'>
+            <div class='name_input'>
+                {{ form_label(form.type_menu) }}
+            </div>
+            <div>
+                {{ form_widget(form.type_menu, {'attr': {'class': 'input_medium'}}) }}
+            </div>
+        </div>
+        <div class='blc_float_input_comment'>
+            Часть позиций, которые хорошо продаются будет из старого меню. Часть нужно будет придумать.
+        </div>
+        <div class='help'></div>
+    </div>
+    <div class='new_str'>
+        <div>
+            {{ form_label(form.type_category) }}
+        </div>
+        <div>
+            {{ form_widget(form.type_category, {'attr': {'class': 'input_medium'}}) }}
+        </div>
+
+
+    </div>
+    <div class='new_str0'>
+
+        <div class='buton' onclick="document.getElementById('new_project').submit(); return false;" id='button'>
+            Bon voyage
+        </div>
+
+        <div class='ok_done' id='ok_done2'>Проект успешно создан. <a href='create_team.php' id='hrefnext'>Перейти дальше
+                >></a></div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

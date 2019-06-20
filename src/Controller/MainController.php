@@ -19,6 +19,8 @@ use App\Repository\CategoryRepository;
 use App\Repository\OldCategoryRepository;
 use App\Repository\OldProductRepository;
 use App\Repository\ProjectRepository;
+use App\Utility\iikoDownloadProduct;
+use App\Utility\iikoDownloadUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -135,6 +137,7 @@ class MainController extends AbstractController
 
         return $this->render('migrat_ok.html.twig');
     }
+
     /**
      * @Route("/migrate_p", name="migrate_p")
      */
@@ -244,6 +247,54 @@ class MainController extends AbstractController
         }
         $entityManager->flush();
         return $this->render('migrat_ok.html.twig');
+    }
+
+    /**
+     * @Route("/down", name="testDown")
+     */
+    public function testDown(iikoDownloadUtil $downloadUtil ,ProjectRepository $projectRepository){
+
+        $project = $projectRepository->findOneBy(['id'=>47]);
+        $count = $downloadUtil->saveDepartments($project);
+        return $this->render('download.html.twig',['count'=>$count]);
+    }
+
+    /**
+     * @Route("/down_c", name="testDown2")
+     */
+    public function testDown2(iikoDownloadUtil $downloadUtil ,ProjectRepository $projectRepository){
+
+        $project = $projectRepository->findOneBy(['id'=>47]);
+        $count = $downloadUtil->saveIikoCategory($project);
+        return $this->render('download.html.twig',['count'=>$count]);
+    }
+    /**
+     * @Route("/down_p", name="testDown3")
+     */
+    public function testDown3(iikoDownloadProduct $downloadProduct ,ProjectRepository $projectRepository){
+
+        $project = $projectRepository->findOneBy(['id'=>47]);
+        $count = $downloadProduct->saveProduct($project);
+        return $this->render('download.html.twig',['count'=>$count]);
+    }
+    /**
+     * @Route("/down_ttk", name="testDown4")
+     */
+    public function testDown4(iikoDownloadProduct $downloadProduct ,ProjectRepository $projectRepository){
+
+        $project = $projectRepository->findOneBy(['id'=>47]);
+        $count = $downloadProduct->saveTtk($project);
+        return $this->render('download.html.twig',['count'=>$count]);
+    }
+
+    /**
+     * @Route("/down_category2", name="testDown6")
+     */
+    public function testDown5(iikoDownloadUtil $downloadUtil, ProjectRepository $projectRepository){
+
+        $project = $projectRepository->findOneBy(['id'=>47]);
+        $count = $downloadUtil->updateIikoCategory();
+        return $this->render('download.html.twig',['count'=>$count]);
     }
 
 

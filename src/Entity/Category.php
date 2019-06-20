@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utility\EntityHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
-class Category
+class Category extends EntityHelper
 {
     /**
      * @ORM\Id()
@@ -253,5 +254,18 @@ class Category
         $this->m_id = $m_id;
 
         return $this;
+    }
+    public function getArrayParam($array = ['id','name']){
+
+        $array_param = [];
+
+        foreach ($array as $name_property){
+            if (isset($this->$name_property)){
+
+                $array_param[$name_property] = $this->$name_property;
+            }
+        }
+        return $array_param;
+
     }
 }

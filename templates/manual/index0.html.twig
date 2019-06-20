@@ -1,0 +1,250 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Manual training{% endblock %}
+{% block css %}
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+     <script src="{{ asset('/js/es6-promise/dist/es6-promise.auto.min.js') }}" ></script >
+     <script src="{{ asset('/js/jspdf/dist/jspdf.min.js') }}" ></script >
+     <script src="{{ asset('/js/html2canvas/dist/html2canvas.min.js') }}" ></script >
+     <script src="{{ asset('/js/html2pdf.js/dist/html2pdf.js') }}" ></script >
+     {#<script src="ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>#}
+ {% endblock %}
+{% block body %}
+    <div class='zag1' >
+        Manual training
+    </div >
+    <div class='pzag' >
+        Одна из главных вещей, которая нужна чтобы получить то что хочешь — знать «что хочешь».<br >
+        На этом этапе мы сформируем проект нашего будущего меню Поймем какие будут категории, сколько в них блюд и в
+        каких ценовых категориях.
+
+    </div >
+    {% block menu_cat %}
+
+    {% endblock %}
+    <div class='line_cat_all' >
+        {% for category in categoryes %}
+            <label for='cat{{ category.id }}'
+                   onclick="swich_cat({{ project.id }},{{ category.id }})" >{{ category.Name }} </label >
+            <input type='radio' name='cat_name' id='cat{{ category.id }}' {% if loop.index0 == 0 %}checked{% endif %}>
+        {% endfor %}
+        <label for='cat0'
+               onclick="add_category()" >Добавить + </label >
+        <input type='radio'  name='product_name' id='cat0' >
+
+    </div >
+
+    <div class='line_cat_all' >
+        {% for category in categoryes %}
+            {% if loop.index0 == 0 %}
+                {% for product in category.products %}
+                    <label for='product{{ product.id }}'
+                           onclick="swich_cat({{ project.id }},{{ product.id }})" >{{ product.nameWork }} </label >
+                    <input type='radio' {% if loop.index0 == 0 %}checked{% endif %} name='product_name' id='product{{ product.id }}' >
+                    {% if loop.last  %}
+                        <label for='product0'
+                               onclick="add_product_manual({{ category.id }},{{ project.id }})" >Добавить + </label >
+                        <input type='radio'  name='product_name' id='product0' >
+                    {% endif %}
+
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+
+    </div >
+
+
+    <div class="print-container " >
+        <page >
+            <div class="h2 d-flex justify-content-between align-content-center pb-4" >
+                <div class="d-flex align-items-center" >
+                    <div >
+                        <span >4</span >.
+                        <span >Роллы</span > /
+                        <span >Темпурные роллы</span >
+                    </div >
+                </div >
+                <div class="float-right container_logo" >
+                    <img src="/img/logomanual.jpg" alt="" class='logo_manual' >
+                </div >
+            </div >
+
+            <div class="table-manual-container" >
+                <table class="table-manual border" cellpadding="0" >
+                    <tr >
+                        <td class="text-center font-12 p-3 border" >Технологическая карта № 323 434</td >
+                        <td class="text-center h3 p-2 border text-dark" ><strong >Банана эби new</strong ></td >
+                    </tr >
+                    <tr >
+                        <td style="vertical-align:top; height:100%;" class="w-50" >
+                            <table class="in_size_table font-8" >
+                                <tr >
+                                    <td class="p-2 border " >№</td >
+                                    <td class="p-2 border " >Наименование продукта</td >
+                                    <td class="p-2 border" >Ед. изм.</td >
+                                    <td class="p-2 border" >Вес</td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >1</td >
+                                    <td class="p-2 border" >Lorem ipsum dolor sit amet, consectetur adipisicing
+                                        elit. Amet
+                                        distinctio, dolorum earum quia quis vero.
+                                    </td >
+                                    <td class="p-2 border" >гр.</td >
+                                    <td class="p-2 border" > 120</td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                                <tr >
+                                    <td class="p-2 border" >2</td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                    <td class="p-2 border" ></td >
+                                </tr >
+                            </table >
+                        </td >
+                        <td class="border" ><img src="{{ asset('img/testmeal.jpg') }}" alt="" class="img_meal" >
+                        </td >
+                    </tr >
+                    <tr >
+                        <td colspan="2" class="text-center border p-2 font-11" ><strong >Технология
+                                Приготовления</strong ></td >
+                    </tr >
+                    <tr >
+                        <td colspan="2" class="border p-3 font-8" >Lorem ipsum dolor sit amet, consectetur
+                            adipisicing elit.
+                            Dignissimos dolore enim ipsa ipsum odit quo quos sed, soluta! Autem consequatur cumque
+                            dolore
+                            earum
+                            et hic in inventore labore laudantium libero odio odit praesentium, quibusdam quidem
+                            reprehenderit
+                            sunt voluptatem! Commodi eligendi incidunt inventore laudantium minima neque nesciunt
+                            repellendus
+                            similique tempore veniam. Ad, architecto beatae delectus, dolor dolorem eius esse
+                            eveniet
+                            explicabo
+
+                        </td >
+                    </tr >
+
+                </table >
+            </div >
+            <div >
+                <h1 >Комментарий</h1 >
+                <div class="font-10" >
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consectetur culpa deleniti
+                    deserunt
+                    dignissimos, eaque enim error ex, ipsam iusto magni minus molestias nihil perspiciatis porro
+                    quae quas
+                    quasi quia quibusdam quo rerum sapiente tempore temporibus ullam veritatis voluptas voluptate
+                    voluptatibus. Culpa est maxime repudiandae, similique tempore voluptatibus. Adipisci aliquid
+                    consectetur
+                    doloribus dolorum et, explicabo, ipsa laborum nisi nobis possimus ratione rerum sunt
+                    voluptatibus! Ab
+                    accusamus ad alias aliquam amet,
+                </div >
+            </div >
+        </page >
+    </div >
+
+{% endblock %}
+
+
+
+
+
+{% block tailjs %}
+    {{ parent() }}
+    <script >
+
+        var element = document.getElementById('element-to-print');
+        var opt = {
+            margin: 0.5,
+            filename: 'myfile.pdf',
+            image: {type: 'jpeg', quality: 1},
+            pagebreak: {
+                mode: ['avoid-all', 'css'],
+
+            },
+            html2canvas: {scale: 2},
+            jsPDF: {unit: 'in', format: 'a4', putOnlyUsedFonts: 'true', orientation: 'portrait'}
+        };
+        $('.btn').click(function () {
+            html2pdf().set(opt).from(element).save();
+        });
+
+        function add_product_manual(category,project) {
+            $.ajax({
+                url: '/ajax/'+project+'/product/add',
+                type: "GET",
+                data: {
+                    "status": 1,
+                    "category": category,
+                    "project": project
+                },
+                success: function (data) {
+                    $("#ok_done2").show();
+                    $("#add_buut").attr('onclick', '');
+                    $("#add_buut").removeClass('buton_reg2');
+                    $("#add_buut").addClass('buton_grey');
+
+                }
+            })
+        }
+    </script >
+
+{% endblock %}

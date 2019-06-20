@@ -1,0 +1,32 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Analitics{% endblock %}
+{% block headjs %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/js/jquery-tablesort-master/jquery.tablesort.js') }} "></script >
+{% endblock %}
+{% block body %}
+    <h1>Analitics</h1>
+
+<div class='linecat'>
+    <div class='sqv_discr' id='telo'>
+        <div class='line_cat_all'>
+            {% for category in categoryes %}
+                <label for='cat{{ category.id }}' onclick="swich_cat({{ project.id }},{{ analitic.id }},{{ category.id }})">{{ category.Name }}</label>
+                <input type='radio' name='cat_name' id='cat{{ category.id }}'>
+            {% endfor %}
+            <label for='cat_m{{ analitic.id }}'>Сводка</label>
+            <input type='radio' name='cat_name' id='cat_m{{ analitic.id }}' checked onclick='svodka({{ project.id }},{{ analitic.id }})'>
+
+
+        </div>
+    </div>
+    <div id="dialog-message" class='hide' title="Перенос блюд">
+
+    </div>
+    <div class='new_str ' id='table'>
+
+
+        {{ include('analitics/_svodka.html.twig', {'button_label': 'Update'}) }}
+
+{% endblock %}

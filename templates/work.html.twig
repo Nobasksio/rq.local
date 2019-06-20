@@ -1,0 +1,118 @@
+<html>
+<head>
+
+    <title>{% block title %} ABC Анализ resto-quest.ru {% endblock %}</title>
+    <meta charset="utf-8">
+    <META Name='keywords' content='Меню ресторана, меню кафе, аналитика, инижинринг меню' />
+    <META Name='description' content='Сервис для разработки меню ресторана. Аналитика, инжиниринг, подсказки профессионалов, четкий поэтапный план.' />
+    <link rel="icon" type="image/png" href="img/fav.png" />
+
+
+
+
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/js/jquery-ui-1.12.1.custom/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('/js/jquery-ui-1.12.1.custom/jquery-ui.structure.css') }}">
+    <link rel="stylesheet" href="{{ asset('/js/jquery-ui-1.12.1.custom/jquery-ui.theme.css') }}">
+
+{% endblock %}
+
+    {% block headjs %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ asset('/js/jquery-ui-1.12.1.custom/jquery-ui.js') }}"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js'></script>
+    {% endblock %}
+{% block mentrica %}
+    <!-- Yandex.Metrika counter -->
+
+
+    <script type="text/javascript" >
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter48874154 = new Ya.Metrika({
+                        id:48874154,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/48874154" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+{% endblock %}
+
+</head>
+
+<body class=''>
+{% block menu %}
+<div class='line_ch_proj' id=''>
+    <div class='what_ch_proj'>
+        <div class='what_do_com2 float'>
+            Текущий проект
+        </div>
+        <div class='float'>
+            <select class='input_otbor' id='which_project' onchange='select_project()'>
+                <option value='$hash_project' $selected>$name_project</option>
+            </select>
+
+        </div>
+
+    </div>
+    <div class='red_proj'><a href='create_team.php'>редактировать проект</a></div>
+    <div class='help'></div>
+</div>
+<div class='menu'>
+    <a href='{{ path('summary',  {'id': project.id}) }}' class='menul $activ[0]'><span >Сводка</span></a>
+    <a href='{{ path('analitics',  {'project_id': project.id}) }}' class='menul $activ[1]'>
+        <span>Аналитика</span></a>
+    <a href='{{ path('inginiring', {'project_id': project.id}) }}' class='menul $activ[2]'><span>Инжиниринг</span></a>
+    {#<a href='{{ path('degustation', {'project_id': project.id}) }}' class='menul $activ[3]'><span>Дегустации</span></a>#}
+    {#<a href='plate_choice.php' class='menul $activ[4]'><span>Посуда</span></a>#}
+    {#<a href='photoset_all.php' class='menul $activ[5]'><span>Фотосессии</span></a>#}
+    {#<a href='check_all.php' class='menul $activ[6]'><span>Твёрдые данные</span></a>#}
+
+
+        {#<a href='external_table_disign.php?hash=$hash_project2' class='menul {$activ[7]}'>#}
+            {#<span>Дизайн</span>#}
+        {#</a>#}
+        <a href='{{ path('manual',{'id': project.id}) }}' class='menul $activ[6]'><span>Методичка </span></a>
+        <span class='menul2'>{{ app.user.name }}</span>
+
+
+        <a href='{{ path('security_logout') }}' class='menul' >Выход</a>
+    <form action='' id='exit' enctype='' name='exit' method='post'>
+        <input type='hidden' form='exit' name='logout'>
+    </form>
+</div>
+{% endblock  %}
+
+{% block body %}
+{% endblock  %}
+
+{% block tailjs %}
+    <script type="text/javascript" src="{{ asset('js/all_script.js')}}"></script>
+    <script type="application/javascript" >
+        $('table').tablesort();
+
+    </script >
+{% endblock  %}
+</body>
+</html>

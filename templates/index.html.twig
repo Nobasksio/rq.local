@@ -1,0 +1,174 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class='kotopes'>
+    <div class='gav'>
+        <div class='menul2 left'>
+            <a href='login' class='menu_out'>Вход</a>
+        </div>
+        <div class='zag1'>
+            Resto-quest.ru
+        </div>
+        <div class='pzag'>
+
+            Сервис для организации разработки меню ресторана.
+        </div>
+        <div class='line_cat_all'>
+            <label for='what1' onclick='swich_cat(1)'>Эфективная организация</label>
+            <input type='radio' name='cat_name' checked  id='what1'>
+            <label for='what2' onclick='swich_cat(2)'>Аналитика меню</label>
+            <input type='radio' name='cat_name' id='what2'>
+            <label for='what3' onclick='swich_cat(3)'>Игровые механики</label>
+            <input type='radio' name='cat_name' id='what3'>
+            <label for='what4' onclick='swich_cat(4)'>Образование</label>
+            <input type='radio' name='cat_name' id='what4'>
+        </div>
+        <div class='new_str' id='what_blc1'>
+
+            Скорее всего вы уже не раз создавали меню для нового ресторана, обновляли старое или делали сезонное предложение.<br>
+            Тогда вы знаете сколько это отнимает времени и нервов. <br>
+            Мы систематизировали и оптимизиоровали процесс с помощью технологий бережливого производства и убрали всё лишнее <br>
+            <br>
+            С помощью resto-quest вы получите:<br>
+            1. Четкую последовательность действи при разработке меню любой сложности.<br>
+            2. Прозрачную фиксацию этапов выполнения и ответсвенных. <br>
+            3. Автоматизированную аналитику.<br>
+            4. Инструменты и рекомендации меню инжиниринга.<br>
+            5. Инструменты для оптимизации проведения, фотосессии, дегустации, описания меню и многое другое.
+        </div>
+        <div class='new_str hide' id='what_blc2' >
+            С помощью resto-quest вы сможете проводить пакетный анализ меню. <br>
+            Вы получите отчет в разрезе 3х методик(АБЦ, Касанавы Смита и Бостонская матрица) и рекомендациями по каждому блюду.<br>
+            Сможете автоматизировать составление продуктовой матрицы. <br>
+            Составите посудную матрицу. <br>
+            А так же получите рекомендации по наценки блюд, так чтобы для гостей этой прошло наименее болезненно.
+
+        </div>
+        <div class='new_str hide' id='what_blc3'>
+            Для каждого члена команды можно будет назначить свой дедлайн, премию или штраф. <br>
+            Каждый этап фиксируется и делает работу каждого прозрачной. Каждый видит время прохождения каждого этапа.<br>
+            Это мотивирует. <br>
+            На ключевых этапах применена технология вытягивания, когда следующий этап «вытягивает предыдущий».
+        </div>
+        <div class='new_str hide' id='what_blc4'>
+            Методология отработана на десятках ресторанов опытными рестораторами, управляющими и маркетологами.<br>
+            На каждом этапе вы получите исчерпывающие описания действий, а так же полезные неочевидные советы. <br>
+            Для тех кто открывает свой первый ресторан система будет лучшим учебником, который убережот от многих ошибок. <br>
+        </div>
+    </div>
+    <div class='myau'>
+        <div class='zag12'>
+
+            Получи бесплатный доступ на 1 проект
+        </div>
+
+        <div class='Zaginp'>
+            Ваш Email
+        </div>
+        <div>
+            <input type='text' class='input_medium' id='mail_s' value=''>
+        </div>
+        <div class='buton' onclick='bonvoyage()'>
+            Попробовать бесплатно
+        </div>
+
+        <div class='ok_done' id='ok_done2'>Всё получилось! Вам на почту отправлено письмо с подтверждением регистрации.
+            <br>Перейдите по ссылке в нём для продолжения.</div>
+    </div>
+</div>
+<a href='#' ><div id="b"></div></a>
+<div class='loader' id='loader'><img src='loading.gif'></div>
+{% endblock  %}
+
+{% block tailjs %}
+<script type="text/javascript">
+    $( function() {
+        $( "[type=radio]" ).checkboxradio({
+            icon: false
+        });
+    });
+    function swich_cat(id_what){
+        $("[id ^= 'what_blc']").each(function(indx,element){
+            $(element).hide();
+        });
+        $("#what_blc"+id_what).show('blind',500);
+
+    }
+    function bonvoyage(){
+        var  mail_s=$("#mail_s").val();
+        showb();
+        if (mail_s==""){
+            hideb();
+            $("#ok_done2").html("Вы забыли ввести email");
+            $("#ok_done2").show('bounce');
+            hideb();
+            ga ('send', 'event', 'order_error', 'try_eror');
+            yaCounter48874154.reachGoal('error_try');
+
+        }
+        else{
+            $.ajax({
+                url: 'ajax/save_mail_aj.php',
+                data:'mail_s='+mail_s,
+                dataType: "text",
+                success: function(data){
+
+                    if ( data==1){
+                        $("#ok_done2").show('blind');
+                        ga ('send', 'event', 'order_ok', 'try');
+                        yaCounter48874154.reachGoal('ok_try');
+                    }
+                    else{
+                        $("#ok_done2").html(data);
+                        $("#ok_done2").show('blind',500);
+                        ga ('send', 'event', 'order_error', 'try_eror');
+                        yaCounter48874154.reachGoal('error_try');
+
+                    }
+                    hideb();
+                }
+
+
+            })
+        }
+
+    }
+
+
+
+    window.onload = function()
+    {
+        a = document.getElementById("a");
+        b = document.getElementById("b");
+
+
+        c= document.getElementById("c");
+        d= document.getElementById("d");
+        subm=document.getElementById("subm");
+
+        h= document.getElementById("logregtype");
+    }
+
+    function showb()
+    {
+//Задаем прозрачность и блокируем дисплей
+//элемента "b"
+        b.style.filter = "alpha(opacity=80)";
+        b.style.opacity = 0.8;
+        b.style.display = "block";
+        $("#loader").show();
+
+    }
+    function hideb()
+    {
+//Задаем прозрачность и блокируем дисплей
+//элемента "b"
+        b.style.display = "none";
+        $("#loader").hide();
+    }
+
+
+</script>
+<? include "jivo.php"; ?>
+{% endblock  %}

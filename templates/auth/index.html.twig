@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <div class='new_str' id='logblk' >
+        <div class='zag1' >
+            Вход
+        </div >
+        {% if error %}
+            <div class="alert alert-danger">
+                    {{ error.messageKey|trans(error.messageData,'security') }}
+            </div>
+        {% endif %}
+        <form id='myform' name='submitlogin' method='post' action="{{ path('security_login') }}" >
+            <div class='blc_float_med' >
+                <div class='Zaginp' >
+                    Почта
+                </div >
+                <div >
+                    <input type='text' class='input_medium' name='_email' value="{{ last_username }}">
+                </div >
+
+            </div >
+            <div class='blc_float_med' >
+                <div class='Zaginp' >
+                    Пароль
+                </div >
+                <div >
+                    <input type='password' class='input_medium' name='_password' id='pass' name='pass' >
+                    <span class='swich_link rec_pasword' onclick='showreg(3)' >Востановить пароль</span ></div >
+            </div >
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <input type="hidden" name="_target_path" value="{{ app.request.get('redirect_to') }}">
+            <div class='reg' >Первый раз?  <a href="{{ path('user_register') }}"><span class='swich_link' onclick='showreg(1)' >Зарегистрироваться</span ></a></div >
+            <div class='buton' onclick="document.getElementById('myform').submit(); return false;" id='login_but' >
+                Bon voyage
+            </div >
+        </form >
+
+    </div >
+{% endblock  %}
+
+{% block tailjs %}
+
+{% endblock  %}

@@ -1,0 +1,71 @@
+
+<div class='line_cat_all'>
+    <div class=''>
+        <span class='name_index'>выручка</span>
+        <span class='index'>{{ val_array.val_vir }}</span>
+        <span>%сс</span>
+        <span  class='index'>{{ val_array.val_ss|round(2, 'floor') }}</span>
+        <span>Средняя цена</span>
+        <span class='index'>{{ val_array.mean_price|round(2, 'floor') }}</span>
+    </div>
+</div>
+<div id='header' class='nav-container'></div>
+
+<table class='table_order table' border='0' cellpadding='0'  cellspacing='0' >
+    <thead>
+    <tr class='th_order_table'>
+        <th class=''></th>
+        <th class='tdz_ord_table'>Рабочее<br> название</th>
+        <th class='tdz_ord_table'>Группа</th>
+        <th class='tdz_ord_table'>Цена</th>
+        <th class='tdz_ord_table'>Категория цены</th>
+        <th class='tdz_ord_table'>Количество продаж</th>
+        <th class='tdz_ord_table'>Отклонение от <br>ср. цены</th>
+        <th class='tdz_ord_table'>СС за ед</th>
+        <th class='tdz_ord_table'>% cc</th>
+        <th class='tdz_ord_table'>Выручка</th>
+        <th class='tdz_ord_table'>Валовая прибыль</th>
+        <th class='tdz_ord_table'>Выручка</th>
+        <th class='tdz_ord_table'>Продажи</th>
+        <th class='tdz_ord_table'>Маржа</th>
+        <th class='tdz_ord_table'>Категории</th>
+        <th class='tdz_ord_table'>Комментарии</th>
+        <th class='tdz_ord_table' id='all_check_td'>Взять в меню <span class='redact_grey_smal' id='all_check_span' onclick='all_check()'>Отметить<br>все</span></th>
+        <th class='tdz_ord_table' id='remake_td'>Переделать </th>
+        <th class='tdz_ord_table' id='disregard_td'>Не учитывать<br> в расчетах </th>
+    </tr>
+    </thead>
+    {% for product in old_products %}
+        <tr class='tr_order2 ' id='tr$id_tov'>
+            <td class='td_ord_table left $style_text' id='num$id_tov'>{{ loop.index }}</td>
+            <td class='td_ord_table_medium left $style_text' id='name_tr$id_tov'>{{ product.name }}</td>
+            <td class='td_ord_table left $style_text' onclick='swich_cat_singl($id_tov, $activ_id_cat)' id='group$id_tov'>{{ product.category.name }}</td>
+            <td class='td_ord_table left $style_text' id='name_tr$id_tov'>{{ product.price }}</td>
+            <td class='td_ord_table $style_text' id='img_tr$id_tov'>{{ product.ProductCat }}</td>
+            <td class='td_ord_discr $style_text' id='sostav_tr$id_tov'>{{ product.sale }}</td>
+            <td class='td_ord_discr $style_text' id='discription_menu_tr$id_tov'>{{ (val_array.mean_price-product.price)|round(2, 'floor') }}</td>
+            <td class='td_ord_table $style_text' id='ves_tr$id_tov'>{{ product.costPrice|round(2, 'floor') }}</td>
+            <td class='td_ord_table $style_text' id='ss_tr$id_tov'>{% if product.price!=0 %}{{ (product.costPrice/product.price)|round(2, 'floor') }}{% endif %}</td>
+            <td class='td_ord_table $style_text' id='ss_tr$id_tov'>{{ (product.price * product.sale)|round(2, 'floor')  }}</td>
+            <td class='td_ord_table $style_text' id='ss_tr$id_tov'>{{ (product.price * product.sale - product.costPrice * product.sale)|round(2, 'floor') }}</td>
+            <td class='td_ord_table {{ product.abcVir }}'>{{ product.abcVir }}</td>
+            <td class='td_ord_table {{ product.abcSale }}'>{{ product.abcSale }}</td>
+            <td class='td_ord_table {{ product.abcMarj }}'>{{ product.abcMarj }}</td>
+            <td class='td_min200 left $style_text' id='ss_tr$id_tov'>
+                <span class='bold'>{{ product.firstOtchName }}</span>
+                {{ product.firstOtchComment }} <br><br>
+                <span class='bold'>{{ product.secondOtchName }} </span> {{ product.secondOtchComment }}
+            </td>
+            <td class='td_ord_table_medium $style_text center' id='comment_td$id_tov' >
+                $coment_all<br>
+            </td>
+            <td class='td_ord_table $style_text' id='checkbox$id_tov'><input type='checkbox' id='check_ch{{ product.id }}' class='check' value='$id_tov,$activ_id_cat'{% if product.product %} {% if product.product.status  %}checked {% endif %}{% endif %} onclick='click_move_to_menu({{ project.id }},{{ product.id }})'></td>
+            <td class='td_ord_table $style_text' id='remake$id_tov'><input type='checkbox' id='remake_ch$id_tov' class='remake' value='$id_tov,$activ_id_cat' ></td>
+            <td class='td_ord_table $style_text' id='remake$id_tov'><input type='checkbox' id='disregard_ch$id_tov' class='remake' value='$id_tov,$activ_id_cat' onclick='click_disregard($id_tov)' {$disregard_check} ></td>
+        </tr>
+    {% endfor %}
+</table>
+<script type="application/javascript" >
+    $('table').tablesort();
+
+</script >

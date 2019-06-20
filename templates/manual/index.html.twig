@@ -1,0 +1,156 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Manual training{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+    {{ encore_entry_link_tags('manual') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+     {#<script src="{{ asset('/js/es6-promise/dist/es6-promise.auto.min.js') }}" ></script >#}
+     {#<script src="{{ asset('/js/jspdf/dist/jspdf.min.js') }}" ></script >#}
+     {#<script src="{{ asset('/js/html2canvas/dist/html2canvas.min.js') }}" ></script >#}
+     {#<script src="{{ asset('/js/html2pdf.js/dist/html2pdf.js') }}" ></script >#}
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >
+     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=zdf8cmj1zltd2sgzkhwl1zqfael594fvdn1wmnj5r4fsl8cw" ></script >
+     {#<script src="ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>#}
+     {#<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" ></script >#}
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+     {#<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>#}
+
+
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+ {% endblock %}
+{% block body %}
+    <div class='zag1' >
+        Manual training
+    </div >
+    <div class='pzag' >
+        Знания сила. И чтобы команда была сильной нужно эти знания до нее донести. Каждый повар должен знать все ингридиенты и нюансы приготовления блюда.
+        Давайте сделаем это удобно и красиво.
+
+    </div >
+    {% block menu_cat %}
+
+    {% endblock %}
+
+
+    </div >
+    <div id="ttk" >
+        <div> Категории</div>
+            <b-button
+                    v-for="(category, idx) in categories"
+                    class="ml-1 mt-1"
+                    :key="category.id"
+                    :pressed.sync="category.id == selected_category"
+                    active-class="primary"
+                    variant="outline-secondary"
+                    @click="changeCategory(category.id)"
+            >
+                $[ category.text ]
+            </b-button>
+        <b-spinner  v-show="visibleC" type="grow"></b-spinner>
+        <div> Блюда</div>
+
+            <b-button
+                    v-for="(product, idx) in products"
+                    class="ml-1 mt-1"
+                    :key="product.id"
+                    variant="outline-secondary"
+                    :pressed.sync="product.id == selected_product"
+                    active-class="primary"
+                    @click="changeProduct(product.id)"
+            >
+                $[ product.text ]
+            </b-button>
+
+        <b-button variant="primary" class="ml-1 mt-1" @click="createNewProduct">Добавить блюдо</b-button>
+        <b-spinner  v-show="visible" type="grow"></b-spinner>
+        <ttk
+                v-bind:class="{ notactive: isActive }"
+                :categories="categories"
+                :project_id="project_id"
+                :subcategories="subcategories"
+                :product="product"
+                :measures="measures"
+                :types_product="types_product"
+                :all_components="all_components"
+                :selected_component="selected_component"
+                :selected_measure="selected_measure"
+                :selected_category="product.selected_category"
+                :selected_subcategory="product.selected_subcategory"
+                :add-component="addComponent"
+                :iiko_products="iiko_products"
+                :iiko_product="iiko_product"
+                :main-alert="mainAlert"
+        >
+        </ttk >
+    </div >
+
+
+{% endblock %}
+
+
+
+
+
+{% block tailjs %}
+    {{ encore_entry_script_tags('manual') }}
+    <script >
+
+        // Vue.component('my-category', {
+        //     template: '#category-template',
+        //     props: {
+        //         categories: Array,
+        //         selected_category: Number,
+        //         product: Object
+        //     },
+        //     delimiters: ['$[', ']'],
+        //     data: function data() {
+        //         return {
+        //             visible1: false
+        //         };
+        //     }
+        // });
+        // Vue.component('my-subcategory', {
+        //     template: '#subcategory-template',
+        //     props: {
+        //         subcategories: Array,
+        //         selected_subcategory: Number,
+        //         product: Object
+        //     },
+        //     delimiters: ['$[', ']'],
+        //     data: function data() {
+        //         return {
+        //             visible2: false
+        //         };
+        //     }
+        // });
+        // Vue.component('my-typep', {
+        //     template: '#typep-template',
+        //     props: {
+        //         types_product:Array,
+        //         product: Object
+        //     },
+        //     delimiters: ['$[', ']'],
+        //     data: function data() {
+        //         return {
+        //             visible2: false
+        //         };
+        //     }
+        // });
+
+
+    </script >
+
+{% endblock %}

@@ -10,6 +10,7 @@ namespace App\Utility;
 
 
 use App\Entity\Ttk;
+use App\Repository\PhotoRepository;
 use App\Repository\ProductRepository;
 use App\Repository\TtkComponentRepository;
 use App\Repository\TtkRepository;
@@ -26,11 +27,13 @@ class FirstProduct
     public function __construct(ProductRepository $productRepository,
                                 TtkRepository $ttkRepository,
                                 TtkComponentRepository $ttkComponentRepository,
+                                PhotoRepository $photoRepository,
                                 EntityManagerInterface $em)
     {
         $this->ProductRepository = $productRepository;
         $this->TtkRepository = $ttkRepository;
         $this->TtkComponentRepository = $ttkComponentRepository;
+        $this->photoRepository = $photoRepository;
         $this->em = $em;
     }
 
@@ -69,6 +72,24 @@ class FirstProduct
                 $response_arr['ttk_num'] = '';
             }
 
+            $response_arr['ttk_name'] = $ttk->getName();
+            if ($ttk->getName() == null){
+                $response_arr['ttk_name'] = '';
+            }
+
+            $photos = $this->photoRepository->findBy(['product'=>$product, 'type'=>5,'status'=>4],['date_create' => 'DESC']);
+            if (!$photos){
+                $photos = $this->photoRepository->findBy(['product'=>$product, 'type'=>1,'status'=>4]);
+            }
+            if ($photos) {
+                $photo = '/uploads/file/'.$photos[0]->getImg();
+            } else {
+                $photo = null;
+            }
+
+            $response_arr['photo'] = $photo;
+
+
             $response_arr['comment'] = $ttk->getComment();
             if ($ttk->getComment() == null) {
                 $response_arr['comment'] = '';
@@ -76,6 +97,11 @@ class FirstProduct
             $response_arr['technology'] = $ttk->getTechnology();
             if ($ttk->getTechnology() == null) {
                 $response_arr['technology'] = '';
+            }
+            if ($product->getType()) {
+                $response_arr['type'] = $product->getType()->getId();
+            } else {
+                $response_arr['type'] = "0";
             }
 
             $Components = $this->TtkComponentRepository->findBy(['Ttk' => $ttk]);

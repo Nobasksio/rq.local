@@ -1,0 +1,133 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Дегустации{% endblock %}
+
+{% block body %}
+    <div class='zag1' >
+        Новая дегустация
+    </div >
+    {% block menu_cat %}
+        <div class='menu new_str'>
+            <a href='degust_all.php' class='menul $activ_2[0]'><span>Дегустации</span></a>
+            <a href='tz_degust.php' class='menul $activ_2[1]'><span>Тех задание</span></a>
+        </div>
+    {% endblock %}
+    <div class='pzag' >
+        Это раздел с дегустациями. Тут будет список всех дегустаций, которые вы будете проводить а так же их результаты.
+
+    </div >
+    <div class='new_str ' >
+        <div >
+            Название
+        </div >
+        <div >
+            <input type='text' class='input_medium' id='name_degust' >
+        </div >
+    </div >
+    <div class='float ' >
+        <div >
+            Дата
+        </div >
+        <div >
+            <input type='text' class='input_min date' id='date' >
+        </div >
+    </div >
+
+    <div class='float st_pad' >
+        <div >
+            Время
+        </div >
+        <div class='' >
+            <input type='text' class='input_min time' id='time' value='12:00' >
+        </div >
+    </div >
+    <div class='float st_pad' >
+        <div >
+            Место
+        </div >
+        <div >
+            <input type='text' class='input_medium' id='place' >
+        </div >
+    </div >
+    <div class='new_str st_pad_top' >
+        <div >
+            Комментарии
+        </div >
+        <textarea class='input_textarea' id='comment' ></textarea >
+    </div >
+
+    <div class='new_str ' >
+        Перечень блюд
+
+    </div >
+<div class='blc_table_new_deg ' >
+    <table class='table_order' border="0" cellpadding="0" cellspacing="0" >
+        <tr class='th_order_table' >
+            <td class='tdz_ord_table' ></td >
+            <td class='tdz_ord_table' >Рабочее название</td >
+            <td class='tdz_ord_table' >Состав</td >
+            <td class='tdz_ord_table' >Категория</td >
+            <td class='tdz_ord_table' >Выход</td >
+            <td class='tdz_ord_table' >Себестоимость</td >
+            <td class='tdz_ord_table' >Повар</td >
+            <td class='tdz_ord_table' ></td >
+        </tr >
+        <tr class='tr_order2' id='end_tr' >
+            <td class='td_ord_table' id='num0' >1</td >
+            <td class='td_ord_table' ><input type='text' class='input_td_med' id='nameb' ></td >
+            <td class='td_ord_discr' ><textarea class='input_medium' id='sostav' ></textarea >
+            </td >
+            <td class='td_ord_table' >
+                <select class='input_td_min' id='cat' >
+                    <option value='0' >Другое</option >
+                </select >
+            <td class='td_ord_table' ><input type='text' class='input_td_min' id='ves' ></td >
+            <td class='td_ord_table' ><input type='text' class='input_td_min' id='ss' ></td >
+            <td class='td_ord_table' ><input type='text' class='input_td_min' id='povar' ></td >
+            <td class='td_ord_table' ></td >
+        </tr >
+        <tr class='tr_order3' >
+            <td class='td_ord_table' ></td >
+            <td class='td_ord_table' colspan="7" >
+                <div class='butonm' onclick='addbludo()' id='addbl' >
+                    Добавить блюдо
+                </div >
+            </td >
+
+
+        </tr >
+    </table >
+</div >
+    <div class='advice' id='advice' >
+        <div class='close' >
+        </div >
+        <div class='zag_advice' >
+            <span class='red' >!</span > Совет
+        </div >
+        <div >
+            <p >
+                Вы добавили в дегустацию уже больше 15 блюд.
+                По нашему опыту это не самая лучшая идея.
+            </p >
+            <p >
+                Во-первых на каждое блюдо у вас уйдет в лучшем случае около 5-7 минут. То есть порядка 1,5-2 часов.
+            </p >
+            <p >
+                А во-вторых возможности вашего организма не безграничны.
+                Больше 15 блюд попробовать даже по чуть-чуть за один раз очень тяжело
+                чисто физически, поэтому все остальные блюда скорее
+                всего получат либо не обьективную оценку либо вообще останутся без нее.
+            </p >
+        </div >
+    </div >
+
+    <div class='buton' onclick='creat_degust()' id='but_gl' >
+        Bon voyage
+    </div >
+    <div class='ok_done' id='ok_done2' >
+    </div >
+{% endblock %}
+{% block tailjs %}
+    {{ parent() }}
+
+{% endblock %}

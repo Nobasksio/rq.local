@@ -38,6 +38,11 @@ class TtkComponent
      */
     private $count;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $iiko_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class TtkComponent
     public function setCount(string $count): self
     {
         $this->count = $count;
+
+        return $this;
+    }
+
+    public function getIikoId(): ?string
+    {
+        return $this->iiko_id;
+    }
+
+    public function setIikoId(?string $iiko_id): self
+    {
+        $this->iiko_id = $iiko_id;
 
         return $this;
     }

@@ -76,10 +76,22 @@ class User implements UserInterface
      */
     private $degustationScores;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\NameMenu", mappedBy="User")
+     */
+    private $namesMenu;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DescriptionMenu", mappedBy="user")
+     */
+    private $descriptionsMenu;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->degustationScores = new ArrayCollection();
+        $this->namesMenu = new ArrayCollection();
+        $this->descriptionsMenu = new ArrayCollection();
     }
 
 
@@ -259,6 +271,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($degustationScore->getUser() === $this) {
                 $degustationScore->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|NameMenu[]
+     */
+    public function getNamesMenu(): Collection
+    {
+        return $this->namesMenu;
+    }
+
+    public function addNamesMenu(NameMenu $namesMenu): self
+    {
+        if (!$this->namesMenu->contains($namesMenu)) {
+            $this->namesMenu[] = $namesMenu;
+            $namesMenu->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNamesMenu(NameMenu $namesMenu): self
+    {
+        if ($this->namesMenu->contains($namesMenu)) {
+            $this->namesMenu->removeElement($namesMenu);
+            // set the owning side to null (unless already changed)
+            if ($namesMenu->getUser() === $this) {
+                $namesMenu->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DescriptionMenu[]
+     */
+    public function getDescriptionsMenu(): Collection
+    {
+        return $this->descriptionsMenu;
+    }
+
+    public function addDescriptionsMenu(DescriptionMenu $descriptionsMenu): self
+    {
+        if (!$this->descriptionsMenu->contains($descriptionsMenu)) {
+            $this->descriptionsMenu[] = $descriptionsMenu;
+            $descriptionsMenu->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDescriptionsMenu(DescriptionMenu $descriptionsMenu): self
+    {
+        if ($this->descriptionsMenu->contains($descriptionsMenu)) {
+            $this->descriptionsMenu->removeElement($descriptionsMenu);
+            // set the owning side to null (unless already changed)
+            if ($descriptionsMenu->getUser() === $this) {
+                $descriptionsMenu->setUser(null);
             }
         }
 

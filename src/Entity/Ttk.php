@@ -43,6 +43,16 @@ class Ttk
      */
     private $ttkComponents;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $iiko_id;
+
 
     public function __construct()
     {
@@ -129,6 +139,30 @@ class Ttk
                 $ttkComponent->setTtk(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getIikoId(): ?string
+    {
+        return $this->iiko_id;
+    }
+
+    public function setIikoId(?string $iiko_id): self
+    {
+        $this->iiko_id = $iiko_id;
 
         return $this;
     }

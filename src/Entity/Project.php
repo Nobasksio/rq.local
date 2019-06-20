@@ -101,6 +101,31 @@ class Project
      */
     private $m_id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TypeProduct", mappedBy="project")
+     */
+    private $typeProducts;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Department", mappedBy="project")
+     */
+    private $departments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\IikoProduct", mappedBy="project")
+     */
+    private $iikoProducts;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\IikoCategory", mappedBy="project")
+     */
+    private $iikoCategories;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Department", inversedBy="projects")
+     */
+    private $iiko_department;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -116,6 +141,11 @@ class Project
         $this->categories = new ArrayCollection();
         $this->degustations = new ArrayCollection();
         $this->subcategories = new ArrayCollection();
+        $this->typeProducts = new ArrayCollection();
+        $this->departments = new ArrayCollection();
+        $this->iikoProducts = new ArrayCollection();
+        $this->iikoCategories = new ArrayCollection();
+        $this->iiko_department = new ArrayCollection();
 
     }
 
@@ -416,6 +446,147 @@ class Project
     public function setMId(?int $m_id): self
     {
         $this->m_id = $m_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TypeProduct[]
+     */
+    public function getTypeProducts(): Collection
+    {
+        return $this->typeProducts;
+    }
+
+    public function addTypeProduct(TypeProduct $typeProduct): self
+    {
+        if (!$this->typeProducts->contains($typeProduct)) {
+            $this->typeProducts[] = $typeProduct;
+            $typeProduct->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTypeProduct(TypeProduct $typeProduct): self
+    {
+        if ($this->typeProducts->contains($typeProduct)) {
+            $this->typeProducts->removeElement($typeProduct);
+            // set the owning side to null (unless already changed)
+            if ($typeProduct->getProject() === $this) {
+                $typeProduct->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Department[]
+     */
+    public function getDepartments(): Collection
+    {
+        return $this->departments;
+    }
+
+    public function addDepartment(Department $department): self
+    {
+        if (!$this->departments->contains($department)) {
+            $this->departments[] = $department;
+            $department->addProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepartment(Department $department): self
+    {
+        if ($this->departments->contains($department)) {
+            $this->departments->removeElement($department);
+            $department->removeProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|IikoProduct[]
+     */
+    public function getIikoProducts(): Collection
+    {
+        return $this->iikoProducts;
+    }
+
+    public function addIikoProduct(IikoProduct $iikoProduct): self
+    {
+        if (!$this->iikoProducts->contains($iikoProduct)) {
+            $this->iikoProducts[] = $iikoProduct;
+            $iikoProduct->addProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIikoProduct(IikoProduct $iikoProduct): self
+    {
+        if ($this->iikoProducts->contains($iikoProduct)) {
+            $this->iikoProducts->removeElement($iikoProduct);
+            $iikoProduct->removeProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|IikoCategory[]
+     */
+    public function getIikoCategories(): Collection
+    {
+        return $this->iikoCategories;
+    }
+
+    public function addIikoCategory(IikoCategory $iikoCategory): self
+    {
+        if (!$this->iikoCategories->contains($iikoCategory)) {
+            $this->iikoCategories[] = $iikoCategory;
+            $iikoCategory->addProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIikoCategory(IikoCategory $iikoCategory): self
+    {
+        if ($this->iikoCategories->contains($iikoCategory)) {
+            $this->iikoCategories->removeElement($iikoCategory);
+            $iikoCategory->removeProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Department[]
+     */
+    public function getIikoDepartment(): Collection
+    {
+        return $this->iiko_department;
+    }
+
+    public function addIikoDepartment(Department $iikoDepartment): self
+    {
+        if (!$this->iiko_department->contains($iikoDepartment)) {
+            $this->iiko_department[] = $iikoDepartment;
+        }
+
+        return $this;
+    }
+
+    public function removeIikoDepartment(Department $iikoDepartment): self
+    {
+        if ($this->iiko_department->contains($iikoDepartment)) {
+            $this->iiko_department->removeElement($iikoDepartment);
+        }
 
         return $this;
     }

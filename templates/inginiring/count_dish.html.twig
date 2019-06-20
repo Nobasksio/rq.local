@@ -1,0 +1,69 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Инжиниринг категорий{% endblock %}
+
+{% block body %}
+    <div class='zag1' >
+        Инжиниринг: количество блюд в категориях
+    </div >
+    {% block menu_cat %}
+        {{ include('inginiring/_menu.html.twig') }}
+    {% endblock %}
+    <div class='pzag' >
+        Теперь нам нужно указать сколько блюд будет в каждой категории.
+
+    </div >
+    <table class='table_order' border="0" cellpadding="0" cellspacing="0" >
+        <tr class='th_order_table' >
+            <td class='tdz_ord_table' ></td >
+            <td class='tdz_ord_table' >Название<br > категории</td >
+            <td class='tdz_ord_table' >Было блюд в старом меню</td >
+            <td class='tdz_ord_table' >Перенесли в новое</td >
+            <td class='tdz_ord_table' >Общее количество<br >в новом меню</td >
+            <td class='tdz_ord_table' >Нужно будет<br >новых блюд</td >
+            <td class='tdz_ord_table' >Рекомендации</td >
+        </tr >
+        {% for category in categories %}
+            <tr class='tr_order3' id='tr{{ category.id }}' >
+                <td class='td_ord_table' id='num{{ category.id }}' >{{ loop.index }}</td >
+                <td class='td_ord_group' id='name_tr{{ category.id }}' >{{ category.name }}</td >
+                <td class='td_ord_table_medium' id='old_kol{{ category.id }}' >{{ category.oldAmount }}</td >
+                <td class='td_ord_table_medium' id='new_kol{{ category.id }}' >{{ category.movedAmount }}</td >
+                <td class='td_ord_table_medium' id='name_tr{{ category.id }}' ><input type='text' class='input_td_med'
+                                                                                      value='{{ category.amountPlan }}'
+                                                                                      id='kol{{ category.id }}' ></td >
+                <td class='td_ord_table_medium'
+                    id='need_new{{ category.id }}' >{{ category.amountPlan-category.movedAmount }}</td >
+                <td class='td_ord_table_medium' id='name_tr{{ category.id }}' ></td >
+
+            </tr >
+
+        {% endfor %}
+
+    </table >
+
+    <div class='buton' onclick='save_kol_blud({{ project.id }})'>
+        Сохранить
+    </div>
+    <div class='ok_done' id='ok_done2' >Категории успешно утверждены. <br >
+        <A href='ing_dish_for_cat.php' >Перейти дальше</A >
+    </div >
+{% endblock %}
+{% block tailjs %}
+    {{ parent() }}
+    <script type="application/javascript" >
+
+        $('[id ^= kol]').keyup(function () {
+            var kol = $(this).val(),
+                id_str = $(this).attr("id"),
+                id_cat = id_str.substring(3),
+                old_kol = $("#old_kol" + id_cat).text(),
+                new_kol = $("#new_kol" + id_cat).text(),
+                need = 0,
+                text_need = "";
+            need = kol - new_kol;
+            $("#need_new" + id_cat).html(need);
+
+        });
+    </script >
+{% endblock %}

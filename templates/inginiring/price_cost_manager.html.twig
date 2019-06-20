@@ -1,0 +1,119 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Инжиниринг категорий{% endblock %}
+
+{% block body %}
+    <div class='zag1' >
+        Инжиниринг: Управление себестоимостью
+    </div >
+    {% block menu_cat %}
+        {{ include('inginiring/_menu.html.twig') }}
+    {% endblock %}
+    <div class='pzag' >
+        Хороший ресторатор должен управлять процентом фудкоста своего ресторана. <br>
+        Давайте и мы будем хорошими рестораторами. <br>Вы можете поставить целевой % фудкоста как для всего меню, так и для отдельной категории.<br>
+        Это поможет при создании новых блюд, при оптимизации себестоимости старых и подскажет как правильно назначить цены в меню. <br>
+        Чем меньше фудкост тем больше прибыли.
+
+    </div >
+    <div class='controlgroup new_str'>
+		<label for='all' onclick='swich_type_ing_ss(0)'>Всё вместе</label>
+		<input type='radio' name='type_cat'  checked id='all'>
+		<label for='bar' onclick='swich_type_ing_ss(1)'>Кухня</label>
+		<input type='radio' name='type_cat' id='bar'>
+	    <label for='kitch' onclick='swich_type_ing_ss(2)'>Бар</label>
+		<input type='radio' name='type_cat' id='kitch'>
+        <div class='help'></div>
+	</div>
+	<div class='new_str'>
+
+		<table class='table_order' border='0' cellpadding='0'  cellspacing='0' >
+		<tr class='tr_order3' id='tr$id_cat'>
+			<td class='td_ord_table left' id='num$id_cat'></td>
+			<td class='td_ord_table '>% фудкоста</td>
+			<td class='td_ord_table ' >Выручка</td>
+			<td class='td_ord_table ' >Себестоимость</td>
+			<td class='td_ord_table ' >Прибыль</td>
+			<td class='td_ord_table ' >Цены при той же<br>себестоимсти продуктов</td>
+		</tr>
+		<tr class='tr_order3' id='tr$id_cat'>
+			<td class='td_ord_table left' id='num$id_cat'>Старое меню</td>
+			<td class='td_ord_table' id='all_ss'>$per_ss_menu_this_type %</td>
+			<td class='td_ord_table' id='all_old_vir'>$all_menu_vir_this_type </td>
+			<td class='td_ord_table' id='all_old_ss'>$all_menu_ss_this_type </td>
+			<td class='td_ord_table' id='all_old_marj'>$all_menu_marj_this_type </td>
+			<td class='td_ord_table' id='all_old_ss'> </td>
+		</tr>
+		<tr class='tr_order3' id='tr$id_cat'>
+			<td class='td_ord_table left' id='num$id_cat'>Новое меню</td>
+			<td class='td_ord_table' id='name_tr$id_cat'><input type='text' class='input_td_40' id='new_ss' value='$ss_plan_this'> %<span id='changess'></span></td>
+			<td class='td_ord_table ' id='all_new_vir'>$all_menu_vir_this_type </td>
+			<td class='td_ord_table ' id='all_new_ss'>$all_menu_ss_this_type </td>
+			<td class='td_ord_table ' id='all_new_marj'>$new_marj </td>
+			<td class='td_ord_table' id='all_old_ss'> </td>
+		</tr>
+		</table>
+	</div>
+	<table class='table_order' border='0' cellpadding='0'  cellspacing='0' >
+		<tr class='th_order_table'>
+			<td class='tdz_ord_table'></td>
+			<td class='tdz_ord_table'>Название<br> категории</td>
+			<td class='tdz_ord_table'>% фудкоста внутри <br>категории в старом меню</td>
+			<td class='tdz_ord_table'>выручка старая</td>
+			<td class='tdz_ord_table'>% который вы хотите <br>получить в новом меню</td>
+			<td class='tdz_ord_table'>выручка новая</td>
+			<td class='tdz_ord_table'>Рекомендации</td>
+		</tr>
+
+		<tr class='tr_order3' id='tr$id_cat'>
+			<td class='td_ord_table' id='num$id_cat'>$i</td>
+			<td class='td_ord_group' id='name_tr$id_cat'>$name</td>
+			<td class='td_ord_table_medium' id='old_kol$id_cat' title='себестоимость($all_ss р)/выручку($all_vir р)*100%'>$per_ss</td>
+			<td class='td_ord_table_medium' id='old_kol$id_cat' title='себестоимость($all_ss р)/выручку($all_vir р)*100%'>$all_vir</td>
+			<td class='td_ord_table_medium' id='name_tr$id_cat'>
+				<input type='text' class='input_td_40' value='$per_calculated_ss' id='new_ss_cat$id_cat'>
+				<input type='hidden' value='$part_cat,$per_calculated_ss' id='part$id_cat'>
+			</td>
+			<td class='td_ord_table_medium' id='old_kol$id_cat' title='$all_sale*100/$per_calculated_ss'>$new_vir</td>
+			<td class='td_ord_table_medium' id='name_tr$id_cat'></td>
+		</tr>
+	</table>
+	</div>
+	<div class='buton' id='but_save' onclick='save_ss()'>
+		Сохранить
+	</div>
+	<div class='ok_done' id='ok_done2'>Планируемое % себестоимости сохранен<br>
+		<A href='ing_price_cat.php'>Перейти дальше</A>
+	</div>
+
+
+
+
+
+</script>
+{% endblock %}
+{% block tailjs %}
+    {{ parent() }}
+    <script type="application/javascript" >
+        var old_percent= {{ per_ss_menu }};
+        $("#new_ss").keyup(function(){
+            var new_ss=$(this).val(),
+                all_old_ss=$("#all_old_ss").text(),
+                all_old_vir=$("#all_old_vir").text(),
+                per_izm=(new_ss-old_percent)/(old_percent/100);
+            $("#changess").text(Math.round(per_izm));
+            $("#all_new_marj").text(Math.round(all_old_vir-all_old_vir/100*new_ss));
+
+            $("[id^='new_ss_cat']").each(function(indx,element){
+                var id_str = $(element).attr("id"),
+                    id_cat=id_str.substring(10),
+                    substringArray = $("#part"+id_cat).val().split(","),
+                    perc=substringArray[1];
+                new_ss=Math.round(+perc+((+perc)/100)*per_izm);
+
+                $(element).val(new_ss);
+
+            });
+        });
+    </script >
+{% endblock %}

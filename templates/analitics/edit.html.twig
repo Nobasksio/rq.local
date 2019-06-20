@@ -1,0 +1,14 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Edit Analitics{% endblock %}
+
+{% block body %}
+    <h1>Edit Analitics</h1>
+
+    {{ include('analitics/_form2.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('analitics',{'id':analitic.id,
+        'project_id':project.id}) }}">back to list</a>
+
+    {{ include('analitics/_delete_form.html.twig') }}
+{% endblock %}

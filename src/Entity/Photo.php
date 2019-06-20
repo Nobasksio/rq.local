@@ -47,6 +47,13 @@ class Photo
      */
     private $img;
 
+    public function __construct() {
+        $this->settype(1);
+        $this->setStatus(4);
+        $this->setDateCreate(new \DateTime('now'));
+        $this->setPreview('');
+    }
+
     public function getId(): ?int
     {
         return $this->id;

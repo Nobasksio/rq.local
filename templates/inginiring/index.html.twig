@@ -1,0 +1,20 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Инжиниринг{% endblock %}
+
+{% block body %}
+    <div class='zag1'>
+        Инжиниринг
+    </div>
+    <div class='pzag'>
+        Одна из главных вещей, которая нужна чтобы получить то что хочешь — знать «что хочешь».<br>
+        На этом этапе мы сформируем проект нашего будущего меню Поймем какие будут категории, сколько в них блюд и в каких ценовых категориях.
+
+    </div>
+    {% block menu_cat %}
+        {{ include('inginiring/_menu.html.twig') }}
+    {% endblock %}
+
+
+{% endblock %}
+

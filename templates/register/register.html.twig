@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    {{ form_start(form) }}
+        <div class='new_str' id='logblk' >
+            <div class='zag1' >
+                Регистрация
+            </div >
+            <div class="alert alert-danger">
+                {{ form_errors(form) }}
+            </div>
+            <div class="blc_float_med">
+                <div class="Zaginp">
+                    {{ form_label(form.name, 'Имя Фамилия') }}
+                </div>
+                <div class="" id="some-custom-id">
+                    {{ form_widget(form.name, {'attr': {'class': 'input_medium'}}) }}
+                </div>
+            </div>
+            <div class='blc_float_med'>
+                <div class='Zaginp'>
+                    {{ form_label(form.email, 'Email') }}
+                </div>
+                <div>
+                    {{ form_widget(form.email, {'attr': {'class': 'input_medium'}}) }}
+                </div>
+            </div>
+            <div class='blc_float_med'>
+                <div class='Zaginp'>
+                    {{ form_label(form.plainPassword.first, 'Пароль') }}
+                </div>
+                <div>
+                    {{ form_widget(form.plainPassword.first, {'attr': {'class': 'input_medium'}}) }}
+                </div>
+            </div>
+            <div class='blc_float_med'>
+                <div class='Zaginp'>
+                    {{ form_label(form.plainPassword.second, 'Подтверждение пароля') }}
+                </div>
+                <div>
+                    {{ form_widget(form.plainPassword.second, {'attr': {'class': 'input_medium'}}) }}
+                </div>
+            </div>
+            <div class='blc_float_med'>
+                <div class='Zaginp'>
+                    {{ form_widget(form.termsAgreed) }}
+                    {{ form_label(form.termsAgreed) }}
+                </div>
+            </div>
+            <div >
+                {{ form_label(form.register, 'Bon voyaje') }}
+                {{ form_widget(form.register, {'attr': {'class': 'buton',
+
+                }}) }}
+            </div>
+
+
+
+
+    {{ form_end(form) }}
+
+{% endblock  %}
+
+{% block tailjs %}
+
+{% endblock  %}

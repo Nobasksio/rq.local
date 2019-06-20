@@ -1,0 +1,45 @@
+
+
+{% block body %}
+    <h1>Project index</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Project_name</th>
+            <th>Company_id</th>
+            <th>Kitchen_type</th>
+            <th>Type_menu</th>
+            <th>Old_menu_id</th>
+            <th>Date_create</th>
+            <th>Hash</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.id }}</td>
+                <td>{{ project.projectName }}</td>
+                <td>{{ project.companyId }}</td>
+                <td>{{ project.kitchenType }}</td>
+                <td>{{ project.typeMenu }}</td>
+                <td>{{ project.oldMenuId }}</td>
+                <td>{{ project.dateCreate ? project.dateCreate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ project.hash }}</td>
+                <td>
+                    <a href="{{ path('project_show', {'id': project.id}) }}">show</a>
+                    <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('project_new') }}">Create new</a>
+{% endblock %}

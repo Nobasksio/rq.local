@@ -1,0 +1,46 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Дегустации{% endblock %}
+
+{% block body %}
+    <div class='zag1' >
+        Дегустации
+    </div >
+    {% block menu_cat %}
+        <div class='menu new_str'>
+            <a href='degust_all.php' class='menul $activ_2[0]'><span>Дегустации</span></a>
+            <a href='tz_degust.php' class='menul $activ_2[1]'><span>Тех задание</span></a>
+        </div>
+    {% endblock %}
+    <div class='pzag' >
+        Это раздел с дегустациями. Тут будет список всех дегустаций, которые вы будете проводить а так же их результаты.
+
+    </div >
+     <table class='table_order' border='0' cellpadding='0'  cellspacing='0' >
+		<tr class='th_order_table'>
+			<td class='tdz_ord_table'>Название</td>
+			<td class='tdz_ord_table'>Дата и время</td>
+			<td class='tdz_ord_table'>Место</td>
+			<td class='tdz_ord_table'>Блюд</td>
+			<td class='tdz_ord_table'>Статус</td>
+
+		</tr>
+		<tr class='tr_order'  onclick=\"location.href = 'degust_result.php?hash={$item['hash']}'\">
+					<td class='td_ord_table'>{$item['name_degust']}</td>
+					<td class='td_ord_table'>{$item['date_tasting']}</td>
+					<td class='td_ord_table'>{$item['place']}</td>
+					<td class='td_ord_table'>{$item['kol_blud']}</td>
+					<td class='td_ord_table'>$status_text</td>
+
+				</tr>
+     </table>
+    <a href='{{ path('new_degustation',{'project_id':project.id}) }}' >
+        <div class='buton' >
+            Создать новую
+        </div >
+    </a >
+{% endblock %}
+{% block tailjs %}
+    {{ parent() }}
+
+{% endblock %}
