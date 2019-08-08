@@ -79,6 +79,11 @@ class IikoCategory
      */
     private $department;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="iikoCategories")
+     */
+    private $company;
+
     public function __construct()
     {
         $this->project = new ArrayCollection();
@@ -270,6 +275,18 @@ class IikoCategory
         if ($this->department->contains($department)) {
             $this->department->removeElement($department);
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }

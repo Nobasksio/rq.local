@@ -20,99 +20,36 @@
      {#<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js" ></script >#}
      <script src="https://unpkg.com/vue-multiselect@2.1.0" ></script >
      <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
-<script >
-    window.app_state = JSON.parse('{{ app_state|raw }}');
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
 
-</script >
+     </script >
 
  {% endblock %}
 {% block body %}
     <h1 >Edit Project</h1 >
 
-    {{ include('project/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('project_index') }}" >back to list</a >
     <div id="departments" >
-        <div class="" >
-            <label for="" >Связанные подразделения</label >
-            <div class="row" >
-                <div class="col-6" >
-                    <div >
-                        <label class="typo__label" >Select with search</label >
-                        <multiselect v-model="value"
-                                     :multiple="true"
-                                     :options="app_state.departments"
-                                     label="name"
-                                     placeholder='выбер'
-                                     selectLabel='в'
-                                     track-by="name" >
-                        </multiselect >
-                        <label for="" >Категории для аналитики</label >
-                        <multiselect v-model="category_chosed"
-                                     :multiple="true"
-                                     :options="categories"
-                                     label="name"
-                                     placeholder="Select one"
-                                     track-by="name" >
-                        </multiselect >
-                    </div >
-                </div >
-            </div >
-        </div >
-        <b-button class="btn btn-primary my-3" @click="saveProduct" >Сохранить
+        <project-edit
+        :choosed_departments="choosed_departments"
+        :app_state="app_state"
+        :categories="categories"
+        :chosen_category="chosen_category"
+        :project="project"
+        :all_user="all_user"
+        >
 
-        </b-button >
+        </project-edit>
     </div >
 
 
 
 
-    {{ include('project/_delete_form.html.twig') }}
+
 {% endblock %}
 {% block tailjs %}
     {{ encore_entry_script_tags('project_edit') }}
     <script >
-
-
-        {#let manual = new Vue({#}
-            {#delimiters: ['$[', ']'],#}
-            {#el: '#departments',#}
-            {#created: function () {#}
-                {#this.renameFields();#}
-            {#},#}
-            {#data: {#}
-                {#departments:{{ departments|raw }},#}
-                {#product: 2,#}
-                {#products: [],#}
-                {#visible: false#}
-            {#},#}
-            {#methods: {#}
-                {#renameFields() {#}
-
-                    {#this.departments = makeText(this.departments);#}
-
-                {#},#}
-            {#},#}
-            {#save: function () {#}
-                {#axios.get('/ajax/{{ project.id }}/update/', {#}
-                        {#params: {#}
-                            {#categorys: JSON.stringify(this.selected_category),#}
-                        {#}#}
-                    {#}#}
-                {#).then(response => {#}
-
-                {#})#}
-            {#}#}
-        {#})#}
-
-        {#function makeText(data) {#}
-            {#var data = $.map(data, function (obj) {#}
-                {#obj.text = obj.text || obj.name; // replace name with the property used for the text#}
-                {#obj.title = '';#}
-                {#return obj;#}
-            {#});#}
-            {#return data;#}
-        {#}#}
 
     </script >
 

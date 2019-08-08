@@ -108,6 +108,11 @@ class IikoProduct
      */
     private $project;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="iikoProducts")
+     */
+    private $company;
+
     public function __construct()
     {
         $this->project = new ArrayCollection();
@@ -360,5 +365,17 @@ class IikoProduct
         return $array_param;
 
 
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
+
+        return $this;
     }
 }

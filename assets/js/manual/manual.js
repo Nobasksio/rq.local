@@ -5,6 +5,8 @@ import select2 from './select2.vue'
 import ttk from './ttk.vue'
 import components from './components'
 import savebutton from './savebutton'
+import multiselect2 from './multiselect2'
+
 
 
 Vue.use(BootstrapVue)
@@ -12,11 +14,13 @@ Vue.use(select2)
 Vue.use(ttk)
 Vue.use(components)
 Vue.use(savebutton)
+Vue.use(multiselect2)
 Vue.component('multiselect', Multiselect)
 Vue.component('ttk', ttk)
 Vue.component('select2', select2)
 Vue.component('components', components)
 Vue.component('savebutton', savebutton)
+Vue.component('multiselect2', multiselect2)
 
 const axios = require('axios');
 
@@ -88,12 +92,13 @@ new Vue({
         subcategories: app_state.subcategories,
         measures: app_state.measures,
         all_components: app_state.components,
-        selected_category: app_state.first_product.selected_category,
-        selected_product: app_state.first_product.id,
-        selected_component: 1,
+        selected_component: {
+            id:null,
+            name:''
+        },
         selected_measure: 3,
         iiko_products:app_state.iiko_products,
-        iiko_product:[],
+        selected_subcategory:0,
         mainAlert:false,
         save: 0,
         product: {
@@ -106,6 +111,7 @@ new Vue({
             comment: app_state.first_product.comment,
             technology: app_state.first_product.technology,
             components: app_state.first_product.components,
+            iiko_ttk:app_state.first_product.iiko_ttk,
             photo: app_state.first_product.photo
         }
     },
@@ -137,35 +143,40 @@ new Vue({
                 if (res_data.id != 0) {
                     this.product =
                         {
-                            id: res_data.id,
-                            selected_category: res_data.selected_category,
-                            selected_subcategory: res_data.selected_subcategory,
-                            name: res_data.name,
-                            ttk_num: res_data.ttk_num,
-                            comment: res_data.comment,
-                            type: res_data.type,
-                            technology: res_data.technology,
-                            components: res_data.components,
-                            photo: res_data.photo
+                            id: res_data.product.id,
+                            type: res_data.product.type,
+                            selected_category: res_data.product.selected_category,
+                            selected_subcategory: res_data.product.selected_subcategory,
+                            name: res_data.product.name,
+                            ttk_num: res_data.product.ttk_num,
+                            comment: res_data.product.comment,
+                            technology: res_data.product.technology,
+                            components: res_data.product.components,
+                            iiko_ttk:res_data.product.iiko_ttk,
+                            photo: res_data.product.photo
                         };
                 } else {
                     this.product =
                         {
                             id: res_data.id,
+                            type: '1',
                             selected_category: this.selected_category,
                             selected_subcategory: '0',
                             name: '',
                             ttk_num: '',
                             comment: '',
-                            type: '1',
                             technology: '',
                             components: [],
+                            iiko_ttk:[],
+                            photo: null
                         };
                 }
 
 
-                this.products = res_data.products;
+                this.products = res_data.product.products;
                 this.products = makeValue(this.products);
+                this.all_components = res_data.components;
+                this.all_components =  makeText(this.all_components);
                 this.doResponseProduct = false;
                 this.product = checktype(this.product);
                 this.selected_product = res_data.id;
@@ -182,23 +193,25 @@ new Vue({
                 this.selected_product = product_id;
                 axios.get('/ajax/'+this.app_state.project_id+'/manual/product/' + this.selected_product)
                     .then(response => {
-                        console.log(response.data);
                         let res_data = response.data;
 
-                        console.log(res_data.id);
+
                         this.product =
                             {
-                                id: res_data.id,
-                                selected_category: res_data.selected_category,
-                                selected_subcategory: res_data.selected_subcategory,
-                                name: res_data.name,
-                                type: res_data.type,
-                                ttk_num: res_data.ttk_num,
-                                comment: res_data.comment,
-                                technology: res_data.technology,
-                                components: res_data.components,
-                                photo: res_data.photo,
+                                id: res_data.product.id,
+                                type: res_data.product.type,
+                                selected_category: res_data.product.selected_category,
+                                selected_subcategory: res_data.product.selected_subcategory,
+                                name: res_data.product.name,
+                                ttk_num: res_data.product.ttk_num,
+                                comment: res_data.product.comment,
+                                technology: res_data.product.technology,
+                                components: res_data.product.components,
+                                iiko_ttk:res_data.product.iiko_ttk,
+                                photo: res_data.product.photo,
                             };
+                        this.all_components =  makeText(res_data.components);
+
                         this.isActive = false;
                         this.visible = false;
                     })
@@ -219,14 +232,16 @@ new Vue({
                 this.product =
                     {
                         id: res_data.id,
+                        type: "1",
                         selected_category: this.selected_category,
                         selected_subcategory: '0',
                         name: 'Новое блюдо',
-                        type: "1",
                         ttk_num: '',
                         comment: '',
                         technology: '',
                         components: [],
+                        iiko_ttk:[],
+                        photo: null,
                     };
                 this.doResponseProduct = false;
                 this.product = checktype(this.product);

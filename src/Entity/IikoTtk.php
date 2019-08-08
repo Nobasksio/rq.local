@@ -73,6 +73,11 @@ class IikoTtk
      */
     private $iikoTtkComponents;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $netto_ttk;
+
     public function __construct()
     {
         $this->iikoTtkComponents = new ArrayCollection();
@@ -230,6 +235,18 @@ class IikoTtk
                 $iikoTtkComponent->setIikoTtk(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNettoTtk(): ?string
+    {
+        return $this->netto_ttk;
+    }
+
+    public function setNettoTtk(?string $netto_ttk): self
+    {
+        $this->netto_ttk = $netto_ttk;
 
         return $this;
     }

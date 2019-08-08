@@ -73,6 +73,11 @@ class Analitics
      */
     private $m_id;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $type;
+
     public function __construct() {
         $this->setDateCreate(new \DateTime('now'));
         $this->setHash(md5(rand(0,123232332)));
@@ -255,6 +260,18 @@ class Analitics
     public function setMId(?int $m_id): self
     {
         $this->m_id = $m_id;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

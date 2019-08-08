@@ -1,0 +1,250 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Edit Project{% endblock %}
+
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    {{ encore_entry_link_tags('product_edit') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+     <script src="https://unpkg.com/vue-multiselect@2.1.0" ></script >
+     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+         console.log(window.app_state);
+     </script >
+
+ {% endblock %}
+{% block body %}
+    <div id="products" >
+        <h1 >Редактирование блюда </h1 >
+        <label class="" >Рабочее название:</label >
+        <div class="form-group row" >
+
+            <div class="col-sm-6" >
+
+                <b-form-input
+                        id="input-1"
+                        v-model="product.name_work"
+                        type="text"
+                        required
+                        placeholder="Введите название"
+                ></b-form-input >
+                </b-form-group >
+            </div >
+            {#<label class="col-sm-2 col-form-label" >смотреть историю</label >#}
+        </div >
+        <label class="" >Название для меню:</label >
+        <div class="form-group row" >
+            <div class="col-sm-6" >
+                <b-form-input
+                        v-model="product.name_menu"
+                        type="text"
+                        required
+                        placeholder="Введите название"
+                ></b-form-input >
+            </div >
+            {#<label class="col-sm-2 col-form-label" >смотреть историю</label >#}
+        </div >
+        <label >Категория</label >
+        <div class="form-group row" >
+            <div class="col-sm-6" >
+                <multiselect v-model="selected_category"
+                             :multiple="false"
+                             :options="app_state.categories"
+                             label="name"
+                             track-by="name" >
+                </multiselect >
+            </div >
+
+        </div >
+        <div class="form-group row" >
+            <div class="col-sm-2" >
+                <label class="" >Себестоимость:</label >
+                <b-form-input
+                        v-model="product.cost_price"
+                        type="text"
+                        required
+                        placeholder=""
+                ></b-form-input >
+                {#<small class="form-text text-muted float-left"><a href="">история</a>#}
+                {#</small>#}
+                {#<small class="form-text text-muted text-right"><a href="">ред.</a>#}
+                {#</small>#}
+            </div >
+            <div class="col-sm-2" >
+                <label class="" >Старая цена:</label >
+                <b-form-input
+                        v-model="product.old_price"
+                        type="text"
+                        required
+                        placeholder=""
+
+                ></b-form-input >
+            </div >
+            <div class="col-sm-2" >
+                <label class="" >Новая цена:</label >
+                <b-form-input
+                        v-model="product.price"
+                        type="text"
+                        required
+                        placeholder=""
+                ></b-form-input >
+            </div >
+
+        </div >
+        <div class="form-group row" >
+            <div class="col-sm-2" >
+                <label class="" >Выход г:</label >
+                <b-form-input
+                        v-model="product.ves"
+                        type="text"
+                        required
+                        placeholder=""
+                ></b-form-input >
+            </div >
+        </div >
+        <div class="form-group row" >
+            <div class="col-sm-6" >
+                <label class="" >ТТК:</label >
+                <b-table :items="product.components"
+                         :fields="fields"
+                         :tbody-tr-class="rowClass"
+                         small="true"
+                         bordered="true"
+                ></b-table >
+            </div >
+            <div class="col-sm-4" >
+                <label class="" >Связанная карточка в айке:</label >
+                <multiselect v-model="product.iiko_ttk"
+                             :multiple="false"
+                             :options="app_state.categories"
+                             label="name"
+                             track-by="name" >
+                </multiselect >
+            </div >
+        </div >
+        <div class="form-group row" >
+            <div class="col-sm-6" >
+                <label class="" >Состав:</label >
+                <b-form-textarea
+                        id="textarea"
+                        v-model="product.consist"
+                        placeholder="Enter something..."
+                        rows="3"
+                        max-rows="6"
+                ></b-form-textarea >
+            </div >
+        </div >
+        <div class="form-group row" >
+            <div class="col-sm-6" >
+                <label class="" >Описание для меню:</label >
+                <b-form-textarea
+                        id="textarea"
+                        v-model="product.description_menu"
+                        placeholder="Enter something..."
+                        rows="3"
+                        max-rows="6"
+                ></b-form-textarea >
+            </div >
+        </div >
+        <div>
+        <label class="" >Фото</label >
+        <b-tabs content-class="mt-3" >
+            <b-tab title="Меню" active >
+                <div class="d-inline" >
+                    <photo-product2
+                            :product="product"
+                            :photo_type="5"
+                    ></photo-product2>
+                </div >
+            </b-tab >
+            <b-tab title="Проработка" >
+                <div class="d-inline" >
+                    <photo-product2
+                            :product="product"
+                            :photo_type="2"
+                    ></photo-product2>
+                </div >
+            </b-tab >
+            <b-tab title="Фотосессия" >
+                <div class="d-inline" >
+                    <photo-product2
+                            :product="product"
+                            :photo_type="3"
+                    ></photo-product2>
+                </div >
+            </b-tab >
+            <b-tab title="ТТК" >
+                <div class="d-inline" >
+                    <photo-product2
+                            :product="product"
+                            :photo_type="4"
+                    ></photo-product2>
+                </div >
+            </b-tab >
+        </b-tabs >
+        </div>
+        <label class="" >Посуда</label >
+        <div>
+        <label class="" >Комментарии:</label >
+        <b-card >
+
+            <b-media v-for="comment in product.comments" class="my-2">
+                <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" ></b-img >
+
+                <h5 class="mt-0" >$[ comment.user_name ]: </h5 >
+                <p class="mb-0">
+                    $[ comment.text ]
+                </p >
+                <span class="date_text">$[ comment.date ]</span>
+
+            </b-media >
+        </b-card >
+        </div>
+        <b-button variant="primary" class="my-3" @click="saveProduct">
+            Сохранить
+            <b-spinner small v-show="loading" type="grow" ></b-spinner >
+        </b-button>
+        <div class="btn btn-danger float-right my-3" v-show="product.status!=0" v-b-modal.modal-1>
+            Удалить продукт
+            <b-spinner small v-show="loading" type="grow">
+
+            </b-spinner>
+        </div >
+        <div class="btn btn-danger float-right my-3" v-show="product.status==0" v-b-modal.modal-1>
+            Вернуть блюдо
+            <b-spinner small v-show="loading" type="grow">
+
+            </b-spinner>
+        </div >
+        <b-modal id="modal-1" title="BootstrapVue" @ok="delProduct">
+            <template slot="modal-title"
+            >
+                Удалить блюдо
+            </template>
+            <p class="my-4">Вы уверены что хотите удалить этот продукт?</p>
+        </b-modal>
+
+    </div >
+
+
+
+{% endblock %}
+{% block tailjs %}
+    {{ encore_entry_script_tags('product_edit') }}
+    <script >
+
+
+    </script >
+
+{% endblock %}
+

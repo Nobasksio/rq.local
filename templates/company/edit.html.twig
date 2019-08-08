@@ -1,0 +1,213 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Project{% endblock %}
+
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    {{ encore_entry_link_tags('company_create') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+     {#<script src="ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>#}r
+     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >#}
+     {#<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" ></script >#}
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+     {#<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js" ></script >#}
+     <script src="https://unpkg.com/vue-multiselect@2.1.0" ></script >
+     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
+{% block body %}
+    <h1 >{{ controller_name }}</h1 >
+    <div id="company" >
+        <div class="" >
+            <label for="" >Связанные подразделения</label >
+            <div class="row" >
+                <div class="col-6" >
+                    <label class="typo__label" >Название компании</label >
+                    <b-form-input v-model="company.name" placeholder="" ></b-form-input >
+                    <label class="typo__label mt-3" >Проекты связанные с компанией </label >
+                    <b-row >
+
+                        <b-col cols="10" >
+
+                            <multiselect v-model="company.projects_company"
+                                         :multiple="true"
+                                         :options="all_projects"
+                                         label="name"
+                                         placeholder='выбери подразделение'
+                                         selectLabel='в'
+                                         track-by="name" >
+                            </multiselect >
+                        </b-col >
+                        <b-col cols="2" align-self="center" class="icon_wrapper" >
+                            <svg id="i-info" class='icon'
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 32 32" width="32" height="32"
+                                 fill="none" stroke="currentcolor"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 stroke-width="2" >
+                                <path d="M16 14 L16 23 M16 8 L16 10" />
+                                <circle cx="16" cy="16" r="14" />
+                            </svg >
+                        </b-col >
+                        <b-popover
+                                target="i-info"
+                                title="Связанные проекты"
+                                triggers="hover focus"
+                                content="Свяжите проекты в одну компанию чтобы видеть общие справочники, которые выгрузите из внешних источников(iiko, r-keepper). Вы видите только проекты которые создали сами или вам добавили в роли администратора."
+                        ></b-popover >
+                    </b-row >
+                    <label class="typo__label mt-3" >Справочники</label >
+                    <b-tabs content-class="mt-3" >
+                        <b-tab title="Настройка" active >
+                            <label class="typo__label mt-3" >Адрес iiko сервера</label >
+                            <b-form-input v-model="company.iiko_address" placeholder="" ></b-form-input >
+                            <label class="typo__label mt-3" >Логин iiko</label >
+                            <b-form-input v-model="company.iiko_user" placeholder="" ></b-form-input >
+                            <label class="typo__label mt-3" >Пароль iiko</label >
+                            <b-form-input v-model="company.iiko_pass" type="password" placeholder="" ></b-form-input >
+                            <label class="typo__label mt-3" >Данные для выгрузки</label >
+                            <b-form-checkbox v-model="company.isDepartment" name="check-button" switch >
+                                Список подразделений
+                                <div class="icon_wrapper d-inline" >
+                                    <svg id="i-info-department" class='icon'
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 32 32" width="16" height="16"
+                                         fill="none" stroke="currentcolor"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         stroke-width="2" >
+                                        <path d="M16 14 L16 23 M16 8 L16 10" />
+                                        <circle cx="16" cy="16" r="14" />
+                                    </svg >
+                                </div >
+                                <b-popover
+                                        target="i-info-department"
+                                        title="Список подразделений из iiko"
+                                        triggers="hover focus"
+                                        content="Подразделения необходимы чтобы корректно выгружать отчеты о продажах."
+                                ></b-popover >
+                            </b-form-checkbox >
+                            <b-form-checkbox v-model="company.isProduct" name="check-button" switch >
+                                Спавочник номенклатуры
+                                <div class="icon_wrapper d-inline" >
+                                    <svg id="i-info-product" class='icon'
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 32 32" width="16" height="16"
+                                         fill="none" stroke="currentcolor"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         stroke-width="2" >
+                                        <path d="M16 14 L16 23 M16 8 L16 10" />
+                                        <circle cx="16" cy="16" r="14" />
+                                    </svg >
+                                </div >
+                                <b-popover
+                                        target="i-info-product"
+                                        title="Список продуктов из iiko"
+                                        triggers="hover focus"
+                                        content="Нужны для аналитики продаж, построения продуктовой матрицы и слежения за динамикой себестоимости"
+                                ></b-popover >
+                            </b-form-checkbox >
+                            <b-form-checkbox v-model="company.isTtk" name="check-button" switch >
+                                ТТК
+                                <div class="icon_wrapper d-inline" >
+                                    <svg id="i-info-ttk" class='icon'
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 32 32" width="16" height="16"
+                                         fill="none" stroke="currentcolor"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         stroke-width="2" >
+                                        <path d="M16 14 L16 23 M16 8 L16 10" />
+                                        <circle cx="16" cy="16" r="14" />
+                                    </svg >
+                                </div >
+                                <b-popover
+                                        target="i-info-ttk"
+                                        title="Технологические карты iiko"
+                                        triggers="hover focus"
+                                        content="На основе ТТК можно построить более точную продуктовую матрицу, а так же создать красиые, стандартизированные станционные карты для вашей кухни. "
+                                ></b-popover >
+                            </b-form-checkbox >
+                        </b-tab >
+                        <b-tab title="Загрузка" >
+                            <p >Пока вы ещё не загрузили справочники</p >
+                        </b-tab >
+                        <b-tab title="Управление справочниками" >
+                            <p >Пока тут ничего нет</p >
+                        </b-tab >
+                    </b-tabs >
+
+                </div >
+            </div >
+        </div >
+        <b-button class="btn btn-primary my-3" @click="saveProduct" >
+            Сохранить
+            <b-spinner type="grow" small v-show="loading" label="Loading..." ></b-spinner >
+        </b-button >
+    </div >
+
+
+
+
+{% endblock %}
+{% block tailjs %}
+    {{ encore_entry_script_tags('company_create') }}
+    <script >
+
+
+        {#let manual = new Vue({#}
+        {#delimiters: ['$[', ']'],#}
+        {#el: '#departments',#}
+        {#created: function () {#}
+        {#this.renameFields();#}
+        {#},#}
+        {#data: {#}
+        {#departments:{{ departments|raw }},#}
+        {#product: 2,#}
+        {#products: [],#}
+        {#visible: false#}
+        {#},#}
+        {#methods: {#}
+        {#renameFields() {#}
+
+        {#this.departments = makeText(this.departments);#}
+
+        {#},#}
+        {#},#}
+        {#save: function () {#}
+        {#axios.get('/ajax/{{ project.id }}/update/', {#}
+        {#params: {#}
+        {#categorys: JSON.stringify(this.selected_category),#}
+        {#}#}
+        {#}#}
+        {#).then(response => {#}
+
+        {#})#}
+        {#}#}
+        {#})#}
+
+        {#function makeText(data) {#}
+        {#var data = $.map(data, function (obj) {#}
+        {#obj.text = obj.text || obj.name; // replace name with the property used for the text#}
+        {#obj.title = '';#}
+        {#return obj;#}
+        {#});#}
+        {#return data;#}
+        {#}#}
+
+    </script >
+
+{% endblock %}

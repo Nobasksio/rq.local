@@ -66,6 +66,63 @@ class iikoDownloadUtil
 
         $this->session->set("key_hash", $this->key_hash);
     }
+
+
+    public function getSales(array $departments, $start, $finish){
+
+        $date_start_str =  $start->format('Y-m-d').'T00:00:00.000';
+        $date_finish_str =  $finish->format('Y-m-d').'T00:00:00.000';
+
+
+
+            $request = array(
+                "reportType" => "SALES",
+                "groupByRowFields" => array(
+                    "DishName",
+                    "DishGroup",
+                    "DishGroup.Num",
+                    "DishCode"
+                ),
+                "groupByColFields" => array(),
+                "aggregateFields" => array(
+                    "ProductCostBase.OneItem",
+                    "DishDiscountSumInt.averagePrice",
+                    "DishAmountInt"
+                ),
+                "filters" => array(
+                    "OpenDate.Typed" => array(
+                        "filterType" => "DateRange",
+                        "periodType" => "CUSTOM",
+                        "from" => "$date_start_str",
+                        "to" => "$date_finish_str"
+                    ),
+                    "DeletedWithWriteoff" => array(
+                        "filterType" => "ExcludeValues",
+                        "values" => array("DELETED_WITH_WRITEOFF","DELETED_WITHOUT_WRITEOFF")
+                    ),
+                    "OrderDeleted" => array(
+                        "filterType" => "IncludeValues",
+                        "values" => ["NOT_DELETED"]
+                    ),
+                    "Department.Code" =>array(
+                        "filterType" => "IncludeValues",
+                        "values" => $departments
+                    ),
+                )
+            );
+            set_time_limit(0);
+            $this->curl_object->setConnectTimeout(300);
+            $this->curl_object->setTimeout(300);
+            $req = json_encode($request);
+            $this->curl_object->setHeader('Content-Type', 'application/json');
+            $this->curl_object->post('http://195.206.46.94:9080/resto/api/v2/reports/olap?key='.$this->key_hash."&reportType=TRANSACTIONS", $req);
+
+
+            $data = $this->curl_object->response;
+            $this->closeConnection();
+            return $data;
+
+    }
     public function saveDepartments($project){
         $response = $this->responseDepartments();
 
@@ -102,20 +159,24 @@ class iikoDownloadUtil
         $response = $this->responseCategory();
         $num_added_early = 0;
         foreach ($response  as $category_item) {
-            $iiko_category = new IikoCategory;
 
-            $iiko_category->setIikoId($category_item->id);
-            $iiko_category->setDeleted($category_item->deleted);
-            $iiko_category->setName($category_item->name);
-            $iiko_category->setDescription($category_item->description);
-            $iiko_category->setNum($category_item->num);
-            $iiko_category->setCode($category_item->code);
-            $iiko_category->setParent($category_item->parent);
-            $iiko_category->setUserCategory($category_item->category);
-            $iiko_category->setPosition($category_item->position);
-            //$iiko_category->setVisibilityFilter($category_item->visibilityFilter);
+            $category = $this->iikoCategoryRepository->findOneBy(['iiko_id'=>$category_item->id]);
+            if (!$category) {
+                $iiko_category = new IikoCategory;
 
-            $this->em->persist($iiko_category);
+                $iiko_category->setIikoId($category_item->id);
+                $iiko_category->setDeleted($category_item->deleted);
+                $iiko_category->setName($category_item->name);
+                $iiko_category->setDescription($category_item->description);
+                $iiko_category->setNum($category_item->num);
+                $iiko_category->setCode($category_item->code);
+                $iiko_category->setParent($category_item->parent);
+                $iiko_category->setUserCategory($category_item->category);
+                $iiko_category->setPosition($category_item->position);
+                //$iiko_category->setVisibilityFilter($category_item->visibilityFilter);
+
+                $this->em->persist($iiko_category);
+            }
         }
         try {
             $this->em->flush();
@@ -134,25 +195,26 @@ class iikoDownloadUtil
         foreach ($response  as $key=>$category_item) {
             $category = $this->iikoCategoryRepository->findOneBy(['iiko_id'=> $category_item->id]);
 
+            if ($category) {
 
-
-            if ($category_item->visibilityFilter) {
-                $visible = $serializer->serialize($category_item->visibilityFilter->departments, 'json');
-                foreach ($category_item->visibilityFilter->departments as $department_id){
-                    $department = $this->departmentRepository->findOneBy(['iiko_id'=>$department_id]);
-                    if($department) {
-                        $category->addDepartment($department);
+                if ($category_item->visibilityFilter) {
+                    $visible = $serializer->serialize($category_item->visibilityFilter->departments, 'json');
+                    foreach ($category_item->visibilityFilter->departments as $department_id) {
+                        $department = $this->departmentRepository->findOneBy(['iiko_id' => $department_id]);
+                        if ($department) {
+                            $category->addDepartment($department);
+                        }
                     }
+
+
+                }
+                if ($category_item->visibilityFilter) {
+                    $this->em->persist($category);
                 }
 
-
-            }
-            if ($category_item->visibilityFilter) {
-                $this->em->persist($category);
-            }
-
-            if ($key % 300 == 0){
-                $this->em->flush();
+                if ($key % 300 == 0) {
+                    $this->em->flush();
+                }
             }
         }
         $this->em->flush();

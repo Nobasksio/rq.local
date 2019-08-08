@@ -1,0 +1,83 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Дегустации{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+    {{ encore_entry_link_tags('degustation_edit') }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >
+     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=zdf8cmj1zltd2sgzkhwl1zqfael594fvdn1wmnj5r4fsl8cw" ></script >
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
+{% block body %}
+    <div class='zag1' >
+        Дегустация. Редактирование и итоги
+    </div >
+    {% block menu_cat %}
+        {#<div class='menu new_str'>#}
+            {#<a href='degust_all.php' class='menul $activ_2[0]'><span>Дегустации</span></a>#}
+            {#<a href='tz_degust.php' class='menul $activ_2[1]'><span>Тех задание</span></a>#}
+        {#</div>#}
+    {% endblock %}
+    <div class='pzag' >
+        Это раздел с дегустациями. Тут будет список всех дегустаций, которые вы будете проводить а так же их результаты.
+
+    </div >
+
+    <div id="new_degustation">
+<edit-form
+        :fields="fields"
+        :categories="categories"
+        :degustation="degustation"
+        :project_id="project_id"
+>
+
+</edit-form>
+    </div>
+
+
+    <div class='advice' id='advice' >
+        <div class='close' >
+        </div >
+        <div class='zag_advice' >
+            <span class='red' >!</span > Совет
+        </div >
+        <div >
+            <p >
+                Вы добавили в дегустацию уже больше 15 блюд.
+                По нашему опыту это не самая лучшая идея.
+            </p >
+            <p >
+                Во-первых на каждое блюдо у вас уйдет в лучшем случае около 5-7 минут. То есть порядка 1,5-2 часов.
+            </p >
+            <p >
+                А во-вторых возможности вашего организма не безграничны.
+                Больше 15 блюд попробовать даже по чуть-чуть за один раз очень тяжело
+                чисто физически, поэтому все остальные блюда скорее
+                всего получат либо не обьективную оценку либо вообще останутся без нее.
+            </p >
+        </div >
+    </div >
+{% endblock %}
+{% block tailjs %}
+    {{ encore_entry_script_tags('degustation_edit') }}
+
+
+{% endblock %}

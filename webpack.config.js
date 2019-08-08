@@ -25,8 +25,22 @@ Encore
      */
 
     .addEntry('app', './assets/js/app.js')
-    .addEntry('project_edit', './assets/js/app_project_edit.js')
+    .addEntry('project_create', './assets/js/project/create/create.js')
+    .addEntry('project_edit', './assets/js/project/edit/edit.js')
+    .addEntry('project_list', './assets/js/project/list/list.js')
     .addEntry('manual', './assets/js/manual/manual.js')
+    .addEntry('summary', './assets/js/summary/summary.js')
+    .addEntry('product_edit', './assets/js/product/product_edit.js')
+    .addEntry('degustations', './assets/js/degustation/index/degustations.js')
+    .addEntry('new_degustation', './assets/js/degustation/new_degustation.js')
+    .addEntry('degustation_edit', './assets/js/degustation/degustation_edit.js')
+    .addEntry('degustation_vote', './assets/js/degustation/vote/degustation_vote.js')
+    .addEntry('analitic_create', './assets/js/analitics/create/create.js')
+    .addEntry('analitic_edit', './assets/js/analitics/edit/edit.js')
+    .addEntry('analitic_abc', './assets/js/analitics/abc/abc.js')
+
+    .addEntry('company_create', './assets/js/company/create.js')
+
     .enableVueLoader()
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')

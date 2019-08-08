@@ -1,7 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ваши проекты{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    {{ encore_entry_link_tags('project_list') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
 
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+     <script src="https://unpkg.com/vue-multiselect@2.1.0" ></script >
+     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
 {% block body %}
     <div class='zag1'>
         Ваши проекты
@@ -16,11 +36,13 @@
             У вас пока нет ни одного проекта. Самое время его создать!
         {% endif %}
     </div>
-    {% for project in projects %}
-        <div class='name_project'>
-            <a href="{{ path('summary', {'id': project.id}) }}">{{ project.projectName }}</a>
-        </div>
-    {% endfor %}
+    <div id="list">
+        <project-list
+        :projects="projects"
+        :companies="companies"
+        >
+        </project-list>
+    </div>
     <a href="{{ path('project_new') }}">
         <div class='buton'>
             Создать новый
@@ -29,3 +51,8 @@
 
 {% endblock %}
 
+{% block tailjs %}
+    {{ encore_entry_script_tags('project_list') }}
+
+
+{% endblock %}

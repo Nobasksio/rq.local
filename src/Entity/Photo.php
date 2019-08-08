@@ -47,6 +47,11 @@ class Photo
      */
     private $img;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isMain;
+
     public function __construct() {
         $this->settype(1);
         $this->setStatus(4);
@@ -127,6 +132,18 @@ class Photo
     public function setImg(string $img): self
     {
         $this->img = $img;
+
+        return $this;
+    }
+
+    public function getisMain(): ?bool
+    {
+        return $this->isMain;
+    }
+
+    public function setisMain(?bool $isMain): self
+    {
+        $this->isMain = $isMain;
 
         return $this;
     }

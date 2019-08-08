@@ -9,7 +9,6 @@
 namespace App\Utility;
 
 
-
 class AnaliticsUtil
 {
     public static function countSummary($categories)
@@ -46,16 +45,18 @@ class AnaliticsUtil
         }
         foreach ($categories as $category) {
             $val_vir = $category->getValVir($val_vir);
-            $category->setPerVir($val_vir/($all_vir/100));
+            $category->setPerVir($val_vir / ($all_vir / 100));
         }
 
 
     }
+
     public static function setAbc($old_products)
     {
         $val_vir = 0;
         $val_sale = 0;
         $val_marj = 0;
+        $val_ss = 0;
         $marj_ed = array();
 
         function mySortSale($f1, $f2)
@@ -64,6 +65,7 @@ class AnaliticsUtil
             elseif ($f1->getSale() > $f2->getSale()) return -1;
             else return 0;
         }
+
 
         function mySortMarj($f1, $f2)
         {
@@ -114,17 +116,40 @@ class AnaliticsUtil
         usort($old_products, 'App\Utility\mySortMarj');
         $old_products = self::countAbc($old_products, $val_marj, 'Marj');
 
-        $mean_ss = ($val_vir - $val_marj) / $val_vir;
+        if ($val_vir != 0) {
+            $mean_ss = ($val_vir - $val_marj) / $val_vir;
+        } else {
+            $mean_ss = 0;
+        }
+
+        if (count($marj_ed) != 0) {
+            $sr_marj = $val_marj / count($marj_ed);
+        } else {
+            $sr_marj = 0;
+        }
+
+        if ($val_sale != 0) {
+            $mean_price = ($val_vir) / $val_sale;
+        } else {
+            $mean_price = 0;
+        }
+
+        if (count($marj_ed) != 0) {
+            $sr_marj_ed = array_sum($marj_ed) / count($marj_ed);
+        } else {
+            $sr_marj_ed = 0;
+        }
         return array('val_vir' => $val_vir,
             'val_sale' => $val_sale,
             'val_marj' => $val_marj,
             'val_ss' => $val_ss,
             'sr_ss' => round($mean_ss, 2),
-            'sr_marj' => $val_marj / count($marj_ed),
-            'mean_price' => ($val_vir) / $val_sale,
-            'sr_marj_ed' => array_sum($marj_ed) / count($marj_ed));
+            'sr_marj' => $sr_marj,
+            'mean_price' => $mean_price,
+            'sr_marj_ed' => $sr_marj_ed);
 
     }
+
     public static function countAbc($old_products, $all_sum, $name_param)
     {
         $sum_abc = 0;
@@ -138,7 +163,12 @@ class AnaliticsUtil
                 $product->$set_name('');
             } else {
                 $sale = $product->$get_name();
-                $sum_abc += $sale / ($all_sum / 100);
+                if ($all_sum != 0) {
+                    $sum_abc += $sale / ($all_sum / 100);
+                } else {
+                    $sum_abc += 0;
+                }
+
                 if ($sum_abc < 80) $product->$set_name('A');
                 else if ($sum_abc < 95) $product->$set_name('B');
                 else $product->$set_name('C');
@@ -150,6 +180,7 @@ class AnaliticsUtil
         return $old_products;
 
     }
+
     public static function countPriceCat($old_products, $mean_price)
     {
 
@@ -176,6 +207,7 @@ class AnaliticsUtil
 
         }
     }
+
     public static function setAbcFirstOtch($old_products, $arraySums)
     {
 
@@ -250,32 +282,35 @@ class AnaliticsUtil
         $oth2 = "";
         $oth2_sh = "";
 
-        $mean_part = 100 / count($old_products);
-        foreach ($old_products as $tov_id => $product) {
+        if (count($old_products) != 0) {
+            $mean_part = 100 / count($old_products);
+            foreach ($old_products as $tov_id => $product) {
 
-            $part_sale = $product->getSale() / ($arraySums['val_sale'] / 100);
+                $part_sale = $product->getSale() / ($arraySums['val_sale'] / 100);
 
-            $marj_one = $product->getPrice() - $product->getCostPrice();
+                $marj_one = $product->getPrice() - $product->getCostPrice();
 
-            //print "$tov_id) $dolay_sale {$item['marj_ed']} > {$arraySums['sr_marj_ed_wd']} and {$dolay_sale} > {$arraySums['sr_dolya_wd']} * 0.8 <br> {$arraySums['sr_dolya_wd']}<br><br>";
+                //print "$tov_id) $dolay_sale {$item['marj_ed']} > {$arraySums['sr_marj_ed_wd']} and {$dolay_sale} > {$arraySums['sr_dolya_wd']} * 0.8 <br> {$arraySums['sr_dolya_wd']}<br><br>";
 
-            if (($marj_one > $arraySums['sr_marj_ed']) and ($part_sale > $mean_part * 0.8)) {
-                $oth2 = 'Звезды';
-                $oth2_sh = 'Всё ок. Следите за качеством.';
-            } else if ($marj_one > $arraySums['sr_marj_ed'] and $part_sale < $mean_part * 0.8) {
-                $oth2 = 'Загадки';
-                $oth2_sh = 'Следует стимулировать спрос.';
-            } else if ($marj_one < $arraySums['sr_marj_ed'] and $part_sale < $mean_part * 0.8) {
-                $oth2 = 'Собаки';
-                $oth2_sh = 'Желательно исключить. продаются мало, наценка тоже не большая.';
-            } else if ($marj_one < $arraySums['sr_marj_ed'] and $part_sale > $mean_part * 0.8) {
-                $oth2 = 'Темные лошадки';
-                $oth2_sh = 'Требуется увеличить цену или снизисть себестоимость.';
+                if (($marj_one > $arraySums['sr_marj_ed']) and ($part_sale > $mean_part * 0.8)) {
+                    $oth2 = 'Звезды';
+                    $oth2_sh = 'Всё ок. Следите за качеством.';
+                } else if ($marj_one > $arraySums['sr_marj_ed'] and $part_sale < $mean_part * 0.8) {
+                    $oth2 = 'Загадки';
+                    $oth2_sh = 'Следует стимулировать спрос.';
+                } else if ($marj_one < $arraySums['sr_marj_ed'] and $part_sale < $mean_part * 0.8) {
+                    $oth2 = 'Собаки';
+                    $oth2_sh = 'Желательно исключить. продаются мало, наценка тоже не большая.';
+                } else if ($marj_one < $arraySums['sr_marj_ed'] and $part_sale > $mean_part * 0.8) {
+                    $oth2 = 'Темные лошадки';
+                    $oth2_sh = 'Требуется увеличить цену или снизисть себестоимость.';
+                }
+                $product->setSecondOtchName($oth2);
+                $product->setSecondOtchComment($oth2_sh);
             }
-            $product->setSecondOtchName($oth2);
-            $product->setSecondOtchComment($oth2_sh);
         }
     }
+
     public function mySortSale($f1, $f2)
     {
         if ($f1->getSale() < $f2->getSale()) return 1;
@@ -283,5 +318,9 @@ class AnaliticsUtil
         else return 0;
     }
 
+    public function cmp($a, $b)
+    {
+        return ($a['company_id'] > $b['company_id']);
+    }
 
 }

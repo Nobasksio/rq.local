@@ -41,7 +41,10 @@ class iikoDownloadProduct extends iikoDownloadUtil
         $curl->setHeader('Content-Type', 'application/json');
         set_time_limit(0);
         ini_set('memory_limit', '700M');
-        $curl->get('http://195.206.46.94:9080/resto/api/v2/assemblyCharts/getAll?dateFrom=2019-06-01&dateTo=2019-06-02&key='.$this->key_hash);
+
+        $date_finish = new \DateTime('tomorrow');
+        $date_finish = $date_finish->format("Y-m-d");
+        $curl->get('http://195.206.46.94:9080/resto/api/v2/assemblyCharts/getAll?dateFrom=2019-06-01&dateTo='.$date_finish.'&key='.$this->key_hash);
         $this->closeConnection();
 
         $curl_response = $curl->response;
@@ -139,7 +142,7 @@ class iikoDownloadProduct extends iikoDownloadUtil
 
             if (!$this->isProduct($iiko_id)) {
                 $iiko_product = New IikoProduct();
-                $iiko_product->addProject($project);
+                //$iiko_product->addProject($project);
                 $iiko_product->setIikoId($product_item->id);
                 $iiko_product->setDeleted($product_item->deleted);
                 $iiko_product->setName($product_item->name);
@@ -181,6 +184,7 @@ class iikoDownloadProduct extends iikoDownloadUtil
             }
 
         }
+        $this->em->flush();
 
         return count($response)-$num_added_early;
     }

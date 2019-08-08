@@ -51,8 +51,8 @@
             <b-button
                     v-for="(category, idx) in categories"
                     class="ml-1 mt-1"
-                    :key="category.id"
-                    :pressed.sync="category.id == selected_category"
+                    size="sm"
+                    :pressed.sync="category.id == product.selected_category"
                     active-class="primary"
                     variant="outline-secondary"
                     @click="changeCategory(category.id)"
@@ -63,18 +63,18 @@
         <div> Блюда</div>
 
             <b-button
-                    v-for="(product, idx) in products"
+                    v-for="(product_this, idx) in products"
                     class="ml-1 mt-1"
-                    :key="product.id"
+                    size="sm"
                     variant="outline-secondary"
-                    :pressed.sync="product.id == selected_product"
+                    :pressed.sync="product_this.id == product.id"
                     active-class="primary"
-                    @click="changeProduct(product.id)"
+                    @click="changeProduct(product_this.id)"
             >
-                $[ product.text ]
+                $[ product_this.text ]
             </b-button>
 
-        <b-button variant="primary" class="ml-1 mt-1" @click="createNewProduct">Добавить блюдо</b-button>
+        <b-button variant="primary" size="sm" class="ml-1 mt-1" @click="createNewProduct">Добавить блюдо</b-button>
         <b-spinner  v-show="visible" type="grow"></b-spinner>
         <ttk
                 v-bind:class="{ notactive: isActive }"
@@ -91,7 +91,7 @@
                 :selected_subcategory="product.selected_subcategory"
                 :add-component="addComponent"
                 :iiko_products="iiko_products"
-                :iiko_product="iiko_product"
+                :iiko_product="product.iiko_ttk"
                 :main-alert="mainAlert"
         >
         </ttk >
@@ -107,48 +107,6 @@
 {% block tailjs %}
     {{ encore_entry_script_tags('manual') }}
     <script >
-
-        // Vue.component('my-category', {
-        //     template: '#category-template',
-        //     props: {
-        //         categories: Array,
-        //         selected_category: Number,
-        //         product: Object
-        //     },
-        //     delimiters: ['$[', ']'],
-        //     data: function data() {
-        //         return {
-        //             visible1: false
-        //         };
-        //     }
-        // });
-        // Vue.component('my-subcategory', {
-        //     template: '#subcategory-template',
-        //     props: {
-        //         subcategories: Array,
-        //         selected_subcategory: Number,
-        //         product: Object
-        //     },
-        //     delimiters: ['$[', ']'],
-        //     data: function data() {
-        //         return {
-        //             visible2: false
-        //         };
-        //     }
-        // });
-        // Vue.component('my-typep', {
-        //     template: '#typep-template',
-        //     props: {
-        //         types_product:Array,
-        //         product: Object
-        //     },
-        //     delimiters: ['$[', ']'],
-        //     data: function data() {
-        //         return {
-        //             visible2: false
-        //         };
-        //     }
-        // });
 
 
     </script >

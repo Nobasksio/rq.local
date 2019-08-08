@@ -1,20 +1,45 @@
 {% extends 'work.html.twig' %}
 
 {% block title %}Сводные данные{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+    {{ encore_entry_link_tags('summary') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
 
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >
+     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=zdf8cmj1zltd2sgzkhwl1zqfael594fvdn1wmnj5r4fsl8cw" ></script >
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
 {% block body %}
 <div class='zag1' >
     Сводные данные
 </div >
-<div class="controlgroup new_str" >
-    <label for="transmission-standard" >Таблица</label >
-    <input type="radio" name="transmission" onclick='king_view(1)' checked id="transmission-standard" >
-    <!--<label for="transmission-automatic">Лента</label>
-    <input type="radio" name="transmission" id="transmission-automatic">-->
-    <label for="insurance" >Дашбоард</label >
-    <input type="radio" name="transmission" onclick='king_view(2)' id="insurance" >
-    <div class='help' ></div >
-</div >
+{#<div class="controlgroup new_str" >#}
+    {#<label for="transmission-standard" >Таблица</label >#}
+    {#<input type="radio" name="transmission" onclick='king_view(1)' checked id="transmission-standard" >#}
+    {#<!--<label for="transmission-automatic">Лента</label>#}
+    {#<input type="radio" name="transmission" id="transmission-automatic">-->#}
+    {#<label for="insurance" >Дашбоард</label >#}
+    {#<input type="radio" name="transmission" onclick='king_view(2)' id="insurance" >#}
+    {#<div class='help' ></div >#}
+{#</div >#}
 <div >
 
     <div class='pzag new_str' >
@@ -22,72 +47,53 @@
         Скорее всего пока тут мало данных, но в процессе прохождения этапов данные будут заполнятся.
     </div >
 
-    <div class="controlgroup new_str" >
-        <label for="kitchen" onclick='swich_type(1)' >Кухня</label >
-        <input type="radio" name="type_k" checked id="kitchen" >
-        <label for="bar" onclick='swich_type(2)' >Бар</label >
-        <input type="radio" name="type_k" id="bar" >
-        <div class='help' ></div >
-    </div >
-    <div id='type_blc' >
-        <div class='new_str ' >
-            <div class='new_str' id='table' >
-                <table class='table_order' border="0" cellpadding="0" cellspacing="0" >
-                    <tr class='th_order_table' >
-                        <td class='' ></td >
-                        <td class='tdz_ord_table' >Рабочее<br > название</td >
-                        <td class='tdz_ord_table' >Название<br > для меню</td >
-                        <td class='tdz_ord_table' >Фото</td >
-                        <td class='tdz_ord_table' >Состав</td >
-                        <td class='tdz_ord_table' >Описание<br > для меню</td >
-                        <td class='tdz_ord_table' >Выход</td >
-                        <td class='tdz_ord_table' >Себестоимость</td >
-                        <td class='tdz_ord_table' >Старая цена</td >
-                        <td class='tdz_ord_table' >Новая цена</td >
-                        <td class='tdz_ord_table' >Комментарии</td >
-                    </tr >
-                    <tr class='tr_order2 $style_tr' id='tr$id_tov'>
-                        <td class='td_ord_table left $style_text' id='num$id_tov'>$i</td>
-                        <td class='td_ord_table left $style_text $check[1]' id='name_tr$id_tov'>$name_work</td>
-                        <td class='td_ord_table left $style_text $check[2]' id='name_menu_tr$id_tov'>$name_menu </td>
-                        <td class='td_ord_table_medium $style_text $check[3]'  id='img_tr$id_tov'>$prewfoto <div class='add_foto' onclick='foto_on($id_tov)'>+ фото</div></td>
-                        <td class='td_ord_table_medium left $style_text $check[4]' id='sostav_tr$id_tov'>$consist</td>
-                        <td class='td_ord_table_medium left $style_text $check[5]' id='discription_menu_tr$id_tov'>$discription_menu</td>
-                        <td class='td_ord_table $style_text $check[6]' id='ves_tr$id_tov'>$ves</td>
-                        <td class='td_ord_table $style_text $check[7]' id='ss_tr$id_tov'>$new_ss</td>
-                        <td class='td_ord_table $style_text $check[8]' id='ss_tr$id_tov'>$old_price</td>
-                        <td class='td_ord_table $style_text $check[9]' id='price_tr$id_tov'>$new_price</td>
-                        <td class='td_ord_table_medium' id='comment_td$id_tov' $style_text'>$coment_all</td>
-                    </tr>
-                    <tr class='tr_order2'  id='end_tr'>
-                        <td class='td_ord_table' id='num0'>$i</td>
-                        <td class='td_ord_table left'><input type='text' class='input_td_med' id='nameb'></td>
-                        <td class='td_ord_discr left'></td>
-                        <td class='td_ord_table'></td>
-                        <td class='td_ord_table'>
-                            <textarea class='input_min142' id='sostav'></textarea>
-                        </td>
-                        <td class='td_ord_table'></td>
-                        <td class='td_ord_table'><input type='text' class='input_td_min' id='ves'></td>
-                        <td class='td_ord_table'><input type='text' class='input_td_med' id='ss'></td>
-                        <td class='td_ord_table'><input type='text' class='input_td_med' id='old_price'></td>
-                        <td class='td_ord_table'></td>
-                        <td class='td_ord_table'></td>
+    <div id="summary" >
+        <div class="my-2">
 
-                    </tr>
+            <b-button
+                    v-for="(category_item, idx) in upcategories"
+                    class="ml-1 mt-1"
+                    size="sm"
+                    :pressed.sync="category_item.id == product_category_type"
+                    active-class="primary"
+                    variant="outline-secondary"
+                    @click="changeUpCategory(category_item.id)"
+            >
+                $[ category_item.name ]
+            </b-button>
+            <div> Категории</div>
+            <b-button
+                    v-for="(category, idx) in categoryType"
+                    class="ml-1 mt-1"
+                    size="sm"
+                    :pressed.sync="category.id == selected_category"
+                    active-class="primary"
+                    variant="outline-secondary"
+                    @click="changeCategory(category.id)"
+            >
+                $[ category.name ]
+            </b-button>
+            <b-spinner small v-show="loading" type="grow" ></b-spinner >
+        </div>
+        <summary-table
+        :products="products"
+        :project_id="project_id"
+        :loading="loading"
+        :selected_category="selected_category"
+        :product_category_type="product_category_type"
+        >
+        </summary-table>
+    </div>
 
-                    <tr class='tr_order3'  >
-                        <td class='td_ord_table'></td>
-                        <td class='td_ord_table' colspan="10">
-                            <div class='butonm' onclick=\"addbludo_king('$activ_id_cat')\" id='addbl'>
-                                Добавить блюдо
-                            </div>
-                        </td>
 
-                    </tr>
-                </table>
 
-            </div >
-        </div >
-    </div >
+
     {% endblock %}
+{% block tailjs %}
+    {{ encore_entry_script_tags('summary') }}
+    <script >
+
+
+    </script >
+
+{% endblock %}

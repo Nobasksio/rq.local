@@ -67,6 +67,26 @@ class OldCategory
      */
     private $m_id;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $iiko_code;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $alias;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $combine;
+
     public function __construct()
     {
         $this->oldProducts = new ArrayCollection();
@@ -259,6 +279,87 @@ class OldCategory
     public function setMId(?int $m_id): self
     {
         $this->m_id = $m_id;
+
+        return $this;
+    }
+
+    public function getIikoCode(): ?string
+    {
+        return $this->iiko_code;
+    }
+
+    public function setIikoCode(?string $iiko_code): self
+    {
+        $this->iiko_code = $iiko_code;
+
+        return $this;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(?string $alias): self
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function getArrayParam($array = ['id', 'alias', 'status', 'name', 'type', 'combine'])
+    {
+
+        $array_param = [];
+
+        $array_param['typek'] = $this->getType();
+        $array_param['val_marj'] = $this->getValMarj();
+        $array_param['val_ss'] = $this->getValSs();
+        $array_param['val_sale'] = $this->getValSale();
+        $array_param['val_vir'] = $this->getValVir();
+        $array_param['combine'] = null;
+
+        $all_summ = 0;
+        foreach ($this->getOldProducts() as $old_product) {
+            $all_summ += $old_product->getPrice() * $old_product->getSale();
+        }
+        $all_summ = round($all_summ);
+
+        $array_param['sum'] = $all_summ;
+        $array_param['combine'] = false;
+
+        foreach ($array as $name_property) {
+            if (isset($this->$name_property)) {
+
+                $array_param[$name_property] = $this->$name_property;
+            }
+        }
+
+
+        return $array_param;
+
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCombine(): ?int
+    {
+        return $this->combine;
+    }
+
+    public function setCombine(?int $combine): self
+    {
+        $this->combine = $combine;
 
         return $this;
     }

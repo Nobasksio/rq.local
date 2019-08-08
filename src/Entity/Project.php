@@ -126,12 +126,53 @@ class Project
      */
     private $iiko_department;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserProjectRole", mappedBy="Project")
+     */
+    private $userProjectRoles;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="Projects")
+     */
+    private $company;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDelete;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Plate", mappedBy="project")
+     */
+    private $plates;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlateMatrix", mappedBy="project")
+     */
+    private $plateMatrices;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlateKol", mappedBy="project")
+     */
+    private $plateKols;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlatePatern", mappedBy="project")
+     */
+    private $platePaterns;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlatePaternMatrix", mappedBy="project")
+     */
+    private $platePaternMatrices;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->setDateCreate(new \DateTime('now'));
         $this->setCompanyId(0);
         $this->setOldMenuId(0);
+        $this->setIsDelete(false);
 
         $this->setKitchenType('');
         $this->setTypeMenu(1);
@@ -146,6 +187,12 @@ class Project
         $this->iikoProducts = new ArrayCollection();
         $this->iikoCategories = new ArrayCollection();
         $this->iiko_department = new ArrayCollection();
+        $this->userProjectRoles = new ArrayCollection();
+        $this->plates = new ArrayCollection();
+        $this->plateMatrices = new ArrayCollection();
+        $this->plateKols = new ArrayCollection();
+        $this->platePaterns = new ArrayCollection();
+        $this->platePaternMatrices = new ArrayCollection();
 
     }
 
@@ -586,6 +633,213 @@ class Project
     {
         if ($this->iiko_department->contains($iikoDepartment)) {
             $this->iiko_department->removeElement($iikoDepartment);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserProjectRole[]
+     */
+    public function getUserProjectRoles(): Collection
+    {
+        return $this->userProjectRoles;
+    }
+
+    public function addUserProjectRole(UserProjectRole $userProjectRole): self
+    {
+        if (!$this->userProjectRoles->contains($userProjectRole)) {
+            $this->userProjectRoles[] = $userProjectRole;
+            $userProjectRole->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserProjectRole(UserProjectRole $userProjectRole): self
+    {
+        if ($this->userProjectRoles->contains($userProjectRole)) {
+            $this->userProjectRoles->removeElement($userProjectRole);
+            // set the owning side to null (unless already changed)
+            if ($userProjectRole->getProject() === $this) {
+                $userProjectRole->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function getIsDelete(): ?bool
+    {
+        return $this->isDelete;
+    }
+
+    public function setIsDelete(bool $isDelete): self
+    {
+        $this->isDelete = $isDelete;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Plate[]
+     */
+    public function getPlates(): Collection
+    {
+        return $this->plates;
+    }
+
+    public function addPlate(Plate $plate): self
+    {
+        if (!$this->plates->contains($plate)) {
+            $this->plates[] = $plate;
+            $plate->addProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlate(Plate $plate): self
+    {
+        if ($this->plates->contains($plate)) {
+            $this->plates->removeElement($plate);
+            $plate->removeProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlateMatrix[]
+     */
+    public function getPlateMatrices(): Collection
+    {
+        return $this->plateMatrices;
+    }
+
+    public function addPlateMatrix(PlateMatrix $plateMatrix): self
+    {
+        if (!$this->plateMatrices->contains($plateMatrix)) {
+            $this->plateMatrices[] = $plateMatrix;
+            $plateMatrix->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlateMatrix(PlateMatrix $plateMatrix): self
+    {
+        if ($this->plateMatrices->contains($plateMatrix)) {
+            $this->plateMatrices->removeElement($plateMatrix);
+            // set the owning side to null (unless already changed)
+            if ($plateMatrix->getProject() === $this) {
+                $plateMatrix->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlateKol[]
+     */
+    public function getPlateKols(): Collection
+    {
+        return $this->plateKols;
+    }
+
+    public function addPlateKol(PlateKol $plateKol): self
+    {
+        if (!$this->plateKols->contains($plateKol)) {
+            $this->plateKols[] = $plateKol;
+            $plateKol->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlateKol(PlateKol $plateKol): self
+    {
+        if ($this->plateKols->contains($plateKol)) {
+            $this->plateKols->removeElement($plateKol);
+            // set the owning side to null (unless already changed)
+            if ($plateKol->getProject() === $this) {
+                $plateKol->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlatePatern[]
+     */
+    public function getPlatePaterns(): Collection
+    {
+        return $this->platePaterns;
+    }
+
+    public function addPlatePatern(PlatePatern $platePatern): self
+    {
+        if (!$this->platePaterns->contains($platePatern)) {
+            $this->platePaterns[] = $platePatern;
+            $platePatern->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatePatern(PlatePatern $platePatern): self
+    {
+        if ($this->platePaterns->contains($platePatern)) {
+            $this->platePaterns->removeElement($platePatern);
+            // set the owning side to null (unless already changed)
+            if ($platePatern->getProject() === $this) {
+                $platePatern->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlatePaternMatrix[]
+     */
+    public function getPlatePaternMatrices(): Collection
+    {
+        return $this->platePaternMatrices;
+    }
+
+    public function addPlatePaternMatrix(PlatePaternMatrix $platePaternMatrix): self
+    {
+        if (!$this->platePaternMatrices->contains($platePaternMatrix)) {
+            $this->platePaternMatrices[] = $platePaternMatrix;
+            $platePaternMatrix->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatePaternMatrix(PlatePaternMatrix $platePaternMatrix): self
+    {
+        if ($this->platePaternMatrices->contains($platePaternMatrix)) {
+            $this->platePaternMatrices->removeElement($platePaternMatrix);
+            // set the owning side to null (unless already changed)
+            if ($platePaternMatrix->getProject() === $this) {
+                $platePaternMatrix->setProject(null);
+            }
         }
 
         return $this;

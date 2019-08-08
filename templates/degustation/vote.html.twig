@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Дегустации{% endblock %}
+{% block css %}
+
+
+    {{ encore_entry_link_tags('degustation_vote') }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+
+
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+     </script >
+
+ {% endblock %}
+{% block body %}
+
+
+    <div id="vote" >
+        <vote-page
+                :products="products"
+                :user_hash="user_hash"
+                :average_price="average_price"
+                :degustation_hash="degustation_hash"
+        >
+        </vote-page >
+    </div >
+
+{% endblock %}
+{% block tailjs %}
+    {{ encore_entry_script_tags('degustation_vote') }}
+
+
+{% endblock %}

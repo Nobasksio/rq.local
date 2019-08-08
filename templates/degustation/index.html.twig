@@ -1,39 +1,57 @@
 {% extends 'work.html.twig' %}
 
 {% block title %}Дегустации{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+    {{ encore_entry_link_tags('degustations') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
 
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >
+     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=zdf8cmj1zltd2sgzkhwl1zqfael594fvdn1wmnj5r4fsl8cw" ></script >
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
 {% block body %}
     <div class='zag1' >
         Дегустации
     </div >
     {% block menu_cat %}
-        <div class='menu new_str'>
-            <a href='degust_all.php' class='menul $activ_2[0]'><span>Дегустации</span></a>
-            <a href='tz_degust.php' class='menul $activ_2[1]'><span>Тех задание</span></a>
-        </div>
+        {#<div class='menu new_str'>#}
+            {#<a href='degust_all.php' class='menul $activ_2[0]'><span>Дегустации</span></a>#}
+            {#<a href='tz_degust.php' class='menul $activ_2[1]'><span>Тех задание</span></a>#}
+        {#</div>#}
     {% endblock %}
     <div class='pzag' >
         Это раздел с дегустациями. Тут будет список всех дегустаций, которые вы будете проводить а так же их результаты.
 
     </div >
-     <table class='table_order' border='0' cellpadding='0'  cellspacing='0' >
-		<tr class='th_order_table'>
-			<td class='tdz_ord_table'>Название</td>
-			<td class='tdz_ord_table'>Дата и время</td>
-			<td class='tdz_ord_table'>Место</td>
-			<td class='tdz_ord_table'>Блюд</td>
-			<td class='tdz_ord_table'>Статус</td>
 
-		</tr>
-		<tr class='tr_order'  onclick=\"location.href = 'degust_result.php?hash={$item['hash']}'\">
-					<td class='td_ord_table'>{$item['name_degust']}</td>
-					<td class='td_ord_table'>{$item['date_tasting']}</td>
-					<td class='td_ord_table'>{$item['place']}</td>
-					<td class='td_ord_table'>{$item['kol_blud']}</td>
-					<td class='td_ord_table'>$status_text</td>
+    <div id="degustations">
+        <degustations-list
+                :project_id="project_id"
+                :degustations="degustations"
+                :fields="fields"
+        >
 
-				</tr>
-     </table>
+        </degustations-list>
+    </div>
+
     <a href='{{ path('new_degustation',{'project_id':project.id}) }}' >
         <div class='buton' >
             Создать новую
@@ -41,6 +59,6 @@
     </a >
 {% endblock %}
 {% block tailjs %}
-    {{ parent() }}
+    {{ encore_entry_script_tags('degustations') }}
 
 {% endblock %}

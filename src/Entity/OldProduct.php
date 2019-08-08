@@ -89,6 +89,16 @@ class OldProduct
      */
     private $m_id;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $iiko_code;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $base_category;
+
     public function __construct() {
 
         $this->setStatus(true);
@@ -403,5 +413,58 @@ class OldProduct
 
         return $this;
     }
+
+    public function getIikoCode(): ?string
+    {
+        return $this->iiko_code;
+    }
+
+    public function setIikoCode(?string $iiko_code): self
+    {
+        $this->iiko_code = $iiko_code;
+
+        return $this;
+    }
+
+    public function getArrayParam($array = ['id','name','sale','price','cost_price','vir','marj']){
+
+        $array_param = [];
+
+        $array_param['category_edit'] = false;
+        $array_param['loading2'] = false;
+        $array_param['abc_sale'] = $this->getAbcSale();
+        $array_param['abc_vir'] = $this->getAbcVir();
+        $array_param['abc_marj'] = $this->getAbcMarj();
+        $array_param['product_cat'] = $this->getProductCat();
+        $array_param['per_cost_price'] = $this->getPerCostPrice();
+        $array_param['first_otch_name'] = $this->getFirstOtchName();
+        $array_param['first_otch_comment'] = $this->getFirstOtchComment();
+        $array_param['second_otch_name'] = $this->getSecondOtchName();
+        $array_param['second_otch_comment'] = $this->getSecondOtchComment();
+        $array_param['category'] = ['id' => $this->getCategory()->getId(),
+            'name' => $this->getCategory()->getName()];
+
+        foreach ($array as $name_property){
+            if (isset($this->$name_property)){
+
+                $array_param[$name_property] = $this->$name_property;
+            }
+        }
+        return $array_param;
+
+    }
+
+    public function getBaseCategory(): ?int
+    {
+        return $this->base_category;
+    }
+
+    public function setBaseCategory(?int $base_category): self
+    {
+        $this->base_category = $base_category;
+
+        return $this;
+    }
+
 
 }

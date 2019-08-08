@@ -255,7 +255,7 @@ class Category extends EntityHelper
 
         return $this;
     }
-    public function getArrayParam($array = ['id','name']){
+    public function getArrayParam($array = ['id','name','type']){
 
         $array_param = [];
 

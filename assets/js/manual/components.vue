@@ -28,34 +28,46 @@
                             <td class="p-2 border " >№</td >
                             <td class="p-2 border " >Наименование продукта</td >
                             <td class="p-2 border" >Ед. изм.</td >
-                            <td class="p-2 border" >Вес</td >
+                            <td class="p-2 border" >Колличество</td >
                             <td class="p-2 border" ></td >
                         </tr >
 
                         <tr v-for="(component,index) in product.components" >
                             <td class="p-2 border " >{{ index +1}}</td >
                             <td class="p-2 border" >
-                                <select2 class="select2"
+                                <multiselect2 type='3'
+                                              :options="all_components"
+                                              :component="product.components[index]"
+                                              :product="product"
+                                              :key_m="index"
+                                              :project_id="project_id"
+                                >
+                                </multiselect2 >
+                               <!-- <select2 class="select2"
                                          :measures="all_components"
                                          type='3'
+                                         :key_m="index+1"
                                          :product="product"
-                                         v-model="component.component_id" >
-                                    <option disabled value="0" >выбери</option >
-                                </select2 >
+                                         :project_id="project_id"
+                                         v-model="component.id" >
+                                    <option disabled value='0' >выбери</option >
+                                </select2 >-->
 
                             </td >
                             <td class="p-2 border" >
                                 <select2 class="select2 form-control"
                                          :measures="measures"
                                          type='4'
+                                         :key_m="index+1"
                                          :product="product"
+                                         :project_id="project_id"
                                          v-model="component.measure" >
                                     <option disabled value="0" >выбери</option >
                                 </select2 >
 
                             </td >
                             <td class="p-2 border" >
-                                <b-form-input v-model="component.count" placeholder="Enter your name" ></b-form-input >
+                                <b-form-input v-model="component.count" placeholder="введите количество" ></b-form-input >
                             </td >
                             <td class="p-2 border" >
                                 <button type="button" class="close" aria-label="Close" @click="removeComponent(index)" >
@@ -69,21 +81,44 @@
 
                             </td >
                             <td class="p-2 border" >
-                                <select2 class="select2"
-                                         :measures="all_components"
-                                         type='3'
-                                         :product="product"
-                                         v-model="selected_component" >
-                                    <option disabled value="0" >выбери</option >
-                                </select2 >
+                                <!--<multiselect2 v-model="selected_component"-->
+                                             <!--:product="product"-->
+                                             <!--:project_id="project_id"-->
+                                             <!--tag-placeholder="добавить этот компонент"-->
+                                             <!--placeholder="выбери компонен"-->
+                                             <!--label="name"-->
+                                             <!--track-by="code"-->
+                                             <!--:options="all_components"-->
+                                             <!--:taggable="true"-->
+                                             <!--@tag="addTag">-->
+                                <!--</multiselect2>-->
+                                <multiselect2 type='5'
+                                              :options="all_components"
+                                              :component="selected_component"
+                                              :product="product"
+                                              :key_m="0"
+                                              :project_id="project_id"
+                                >
+                                </multiselect2 >
+                                <!--<select2 class="select2"-->
+                                         <!--:measures="all_components"-->
+                                         <!--type='5'-->
+                                         <!--key_m="0"-->
+                                         <!--:product="product"-->
+                                         <!--:project_id="project_id"-->
+                                         <!--v-model="selected_component" >-->
+                                    <!--<option disabled value="0" >выбери</option >-->
+                                <!--</select2 >-->
                                 <b-spinner small v-show="visible3" type="grow" ></b-spinner >
                             </td >
                             <td class="p-2 border" >
 
                                 <select2 class="select2 form-control"
                                          :measures="measures"
-                                         :type='4'
+                                         :type='6'
+                                         key_m="0"
                                          :product="product"
+                                         :project_id="project_id"
                                          v-model="selected_measure" >
                                     <option disabled value="0" >выбери</option >
                                 </select2 >
@@ -95,10 +130,13 @@
                         </tr >
                         <tr >
                             <td class="p-2 border" colspan="5" >
-                                <div class="btn btn-primary" @click="addComponent" >
+                                <div class="btn btn-primary float-left" @click="addComponent" >
 
                                     Добавить
                                 </div >
+                                <b-alert v-model="showAddProblem" class="float-left mx-2" variant="danger" dismissible>
+                                    Заполните все поля текущего ингридиента перед добавлением следующего!
+                                </b-alert>
                             </td >
                         </tr >
 
@@ -115,6 +153,7 @@
                                 class="ml-4"
                                 v-model="file"
                                 :state="Boolean(product.photo)"
+                                :file="product.photo"
                                 placeholder="загрузить файл"
                                 drop-placeholder="Drop file here..."
                                 ref="upload"
@@ -161,21 +200,32 @@
                 visible3: false,
                 visible4: false,
                 measure_count: null,
-                visibleupload:false
+                visibleupload:false,
+                showAddProblem: false
             };
+        },
+        mounted: function mounted() {
+            console.log('компонент');
+            console.log(this.all_components);
         },
         methods: {
             addComponent: function addComponent() {
-                this.$parent.$parent.product.components.push({
-                    component_name: this.nameSelectedComponent.text,
-                    component_id: this.selected_component,
-                    measure: this.selected_measure,
-                    measure_name: this.nameSelectedMeasure.text,
-                    count: this.measure_count
-                });
-                this.$parent.$parent.mainAlert = true;
-                this.measure_count = null;
+
+                if (this.measure_count != null && this.measure_count != '') {
+                    this.$parent.$parent.product.components.push({
+                        name: this.nameSelectedComponent.text,
+                        id: this.selected_component.id,
+                        measure: this.selected_measure,
+                        measure_name: this.nameSelectedMeasure.text,
+                        count: this.measure_count
+                    });
+                    this.$parent.$parent.mainAlert = true;
+                    this.measure_count = null;
+                } else {
+                    this.showAddProblem = true
+                }
             },
+
             removeComponent: function removeComponent(index) {
                 console.log(index);
                 this.$parent.$parent.mainAlert = true;
@@ -193,7 +243,7 @@
                 console.log(this.file);
                 let formData = new FormData();
                 formData.append('file', this.file);
-                axios.post('/ajax/' + this.project_id + '/product/' + this.product.id + '/addfooto',
+                axios.post('/ajax/product/' + this.product.id + '/addfooto/4/4',
                     formData,
                     {
                         headers: {
@@ -201,7 +251,7 @@
                         }
                     }
                 ).then(response => {
-                    this.$parent.$parent.product.photo = '/uploads/file/' + response.data.img_name
+                    this.$parent.$parent.product.photo = '/uploads/file/' + response.data.img
                     this.visibleupload = false;
                 })
                     .catch(function () {
@@ -231,12 +281,12 @@
                 var _this4 = this;
 
                 var search_measure = this.all_components.filter(function (component) {
-                    return component.id == _this4.selected_component;
+                    return component.id == _this4.selected_component.id;
                 });
 
                 if (!search_measure) {
                     search_measure = this.all_components.filter(function (component) {
-                        return component.name == _this4.selected_component;
+                        return component.name == _this4.selected_component.id;
                     });
                 }
 

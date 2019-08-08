@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "dompdf/dompdf": "^0.8.3",
+        "intervention/image": "^2.5",
         "php-curl-class/php-curl-class": "^8.6",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.2.*",

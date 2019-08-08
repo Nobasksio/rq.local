@@ -22,22 +22,22 @@ class DegustationScore
     private $product;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $taste_score;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $view_score;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $concept_score;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $price_score;
 
@@ -53,9 +53,19 @@ class DegustationScore
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="degustationScores")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Degustation", inversedBy="scores")
+     */
+    private $degustation;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $degustation_user_hash;
 
     public function getId(): ?int
     {
@@ -154,6 +164,30 @@ class DegustationScore
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDegustation(): ?Degustation
+    {
+        return $this->degustation;
+    }
+
+    public function setDegustation(?Degustation $degustation): self
+    {
+        $this->degustation = $degustation;
+
+        return $this;
+    }
+
+    public function getDegustationUserHash(): ?string
+    {
+        return $this->degustation_user_hash;
+    }
+
+    public function setDegustationUserHash(string $degustation_user_hash): self
+    {
+        $this->degustation_user_hash = $degustation_user_hash;
 
         return $this;
     }

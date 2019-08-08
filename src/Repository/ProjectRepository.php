@@ -101,6 +101,48 @@ class ProjectRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findOldProductDegustation($old_degust_id): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+        SELECT * FROM rq_nm_tov p where id_tasting = $old_degust_id
+        ";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
+    public function findOldRating(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT * FROM rq_tasting_rating p
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
+    public function findOldDegustation(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT * FROM rq_tasting t
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
+
     // /**
     //  * @return Project[] Returns an array of Project objects
     //  */

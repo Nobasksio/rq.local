@@ -8,10 +8,12 @@
                     <div class="" >
                         <label >Категория</label >
                         <div class="d-inline" >
-                            <select2 class="select2 form-control"
+                            <select2 class="select2 form-control"r
                                      :measures="categories"
-                                     :type='1'
-                                     :product="product" v-model="product.selected_category" >
+                                     type='1'
+                                     :project_id="project_id"
+                                     :product="product"
+                                     v-model="product.selected_category" >
                                 <option disabled value="0" >выбери</option >
                             </select2 >
                             <b-spinner small v-show="visible1" type="grow" ></b-spinner >
@@ -23,10 +25,11 @@
                         <div class="d-inline" >
                             <select2 class="select2 form-control"
                                      :measures="subcategories"
-                                     :type='2'
+                                     type='2'
+                                     :project_id="project_id"
                                      :product="product"
                                      v-model="product.selected_subcategory" >
-                                <option disabled value="0" >выбери</option >
+                                <option disabled value='0' >Выберите подкатегорию</option >
                             </select2 >
                             <b-spinner small v-show="visible2" type="grow" ></b-spinner >
                         </div >
@@ -36,10 +39,10 @@
                         <div class="d-inline" >
                             <select2 class="select2 form-control"
                                      :measures="types_product"
-                                     :type="6"
+                                     type="7"
                                      :product="product"
                                      v-model="product.type" >
-                                <option disabled value="0" >выбери</option >
+                                <option disabled value="0" ></option >
                             </select2 >
                             <b-spinner small v-show="visible6" type="grow" ></b-spinner >
                         </div >
@@ -55,7 +58,6 @@
                     :all_components="all_components"
                     :selected_component="selected_component"
                     :selected_measure="selected_measure"
-
                     :project_id="project_id"
                     v-on:add-component="addComponent" >
 
@@ -102,7 +104,7 @@
         </b-alert >
         <savebutton v-on:saveproduct="saveProduct"
                     :visibleSave="visibleSave"
-
+                    :project_id="project_id"
         >
         </savebutton >
 
@@ -112,8 +114,8 @@
 <script >
     function prepareComponents(data) {
         var data = $.map(data, function (obj) {
-            obj.id = obj.component_id;
-            obj.text = obj.component_name// replace name with the property used for the text
+            obj.id = obj.component_id || obj.id;
+            obj.text = obj.component_name || obj.name;// replace name with the property used for the text
             return obj;
         });
         return data;
@@ -142,6 +144,9 @@
         delimiters: ['$[', ']'],
         data: function data() {
             return {
+                visible1:false,
+                visible2:false,
+                visible6:false,
                 visibleSave: false,
                 dismissSecs: 3,
                 dismissCountDown: 0,
@@ -172,7 +177,9 @@
                 this.dismissCountDown = dismissCountDown
             },
             getTtk() {
+                let self = this;
                 this.visibleGetTTk = true;
+
 
                 axios.get('/ajax/' + this.project_id + '/product/getiikottk', {
                     params: {
@@ -180,20 +187,28 @@
                     }
                 }).then(response => {
                     this.visibleGetTTk = false;
-                    console.log(response.data);
+
                     let res_data = response.data;
+                    console.log(response.data);
                     this.$parent.product.comment = res_data.technology;
-                    this.$parent.iiko_product = this.iiko_product;
-                    this.$parent.all_components = [...this.$parent.all_components, ...prepareComponents(res_data.components)];
-                    this.$parent.product.components = [];
+                    this.$parent.product.iiko_ttk = this.iiko_product;
+
+                    res_data.components.forEach(function(item, i, arr) {
+                        self.$parent.all_components.push({
+                            name: item.name,
+                            text: item.name,
+                            id: item.id,
+                            title: ""
+                        });
+                    });
+
                     this.$parent.product.name = this.iiko_product.name;
                     this.$parent.product.technology = res_data.comment;
                     this.$parent.product.ttk_num = res_data.ttk_num;
-                    this.product.components = prepareComponents(res_data.components);
+                    this.$parent.product.components = res_data.components;
                     this.$parent.mainAlert = true;
-
                 }).then(
-                    this.$parent.product.components = this.components
+                    //this.$parent.product.components = this.components
 
                 );
             }

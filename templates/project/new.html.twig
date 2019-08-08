@@ -1,9 +1,32 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New Project{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    {{ encore_entry_link_tags('project_create') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
 
+     {#<script src="ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>#}r
+     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >#}
+     {#<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" ></script >#}
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+     {#<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js" ></script >#}
+     <script src="https://unpkg.com/vue-multiselect@2.1.0" ></script >
+     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
 {% block body %}
-    {{ form_start(form, {'attr': {'id': 'new_project'}} ) }}
+
 
     <div class='zag1'>
         Создание нового проекта
@@ -15,78 +38,22 @@
         Ну приступим.
     </div>
 
-    <div class="alert alert-danger">
-        {{ form_errors(form) }}
-    </div>
-    <div class='new_str'>
-        <div class='name_input'>
-            {{ form_label(form.project_name, 'Название проекта') }}
-        </div>
-        <div>
-            {{ form_widget(form.project_name, {'attr': {'class': 'input_medium'}}) }}
-        </div>
-    </div>
-    <div class='new_str'>
-        <div class='float'>
-            <div class='name_input'>
-                Кухня
-            </div>
-            <div>
-                <input type='text' class='input_medium' id='kitchen_project' value=''>
-            </div>
-        </div>
-        <div class='blc_float_input_comment'>
-            Например Японская, Европейская или любая другая. Это поможет нам подобрать для вас максимально полезные советы.
-        </div>
-        <div class='help'></div>
+    <div id="new-project">
+        <project-edit
+                :choosed_departments="choosed_departments"
+                :app_state="app_state"
+                :categories="categories"
+                :project="project"
+                :all_user="all_user"
+        >
+        </project-edit>
     </div>
 
-    <div class='new_str'>
-        <div class='float'>
-            <div class='name_input'>
-                Формат заведения
-            </div>
-            <div>
-                {{ form_widget(form.kitchen_type, {'attr': {'class': 'input_medium'}}) }}
-            </div>
-        </div>
-        <div class='blc_float_input_comment'>
-            Бар, ресторан, кафе и др. Разные форматы предполагают разный подход.
-        </div>
-        <div class='help'></div>
-    </div>
-    <div class='new_str'>
-        <div class='float'>
-            <div class='name_input'>
-                {{ form_label(form.type_menu) }}
-            </div>
-            <div>
-                {{ form_widget(form.type_menu, {'attr': {'class': 'input_medium'}}) }}
-            </div>
-        </div>
-        <div class='blc_float_input_comment'>
-            Часть позиций, которые хорошо продаются будет из старого меню. Часть нужно будет придумать.
-        </div>
-        <div class='help'></div>
-    </div>
-    <div class='new_str'>
-        <div>
-            {{ form_label(form.type_category) }}
-        </div>
-        <div>
-            {{ form_widget(form.type_category, {'attr': {'class': 'input_medium'}}) }}
-        </div>
+{% endblock %}
+{% block tailjs %}
+    {{ encore_entry_script_tags('project_create') }}
+    <script >
 
+    </script >
 
-    </div>
-    <div class='new_str0'>
-
-        <div class='buton' onclick="document.getElementById('new_project').submit(); return false;" id='button'>
-            Bon voyage
-        </div>
-
-        <div class='ok_done' id='ok_done2'>Проект успешно создан. <a href='create_team.php' id='hrefnext'>Перейти дальше
-                >></a></div>
-    </div>
-    {{ form_end(form) }}
 {% endblock %}

@@ -22,7 +22,7 @@
                 this.$emit('saveproduct');
             },
             delProduct(){
-                axios.delete('/ajax/{{ project.id }}/product/delete/', {
+                axios.delete('/ajax/'+this.projext_id+'/product/delete/', {
                     params: {
                         product: JSON.stringify(this.$parent.$parent.product)
                     }

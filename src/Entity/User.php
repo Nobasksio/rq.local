@@ -86,12 +86,54 @@ class User implements UserInterface
      */
     private $descriptionsMenu;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserProjectRole", mappedBy="User")
+     */
+    private $userProjectRoles;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Company", mappedBy="created_by")
+     */
+    private $created_companies;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Plate", mappedBy="user_create")
+     */
+    private $plates;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlateMatrix", mappedBy="user")
+     */
+    private $plateMatrices;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlatePatern", mappedBy="user")
+     */
+    private $platePaterns;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PlatePaternMatrix", mappedBy="user")
+     */
+    private $platePaternMatrices;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->degustationScores = new ArrayCollection();
         $this->namesMenu = new ArrayCollection();
         $this->descriptionsMenu = new ArrayCollection();
+        $this->userProjectRoles = new ArrayCollection();
+        $this->created_companies = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->plates = new ArrayCollection();
+        $this->plateMatrices = new ArrayCollection();
+        $this->platePaterns = new ArrayCollection();
+        $this->platePaternMatrices = new ArrayCollection();
     }
 
 
@@ -333,6 +375,223 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($descriptionsMenu->getUser() === $this) {
                 $descriptionsMenu->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserProjectRole[]
+     */
+    public function getUserProjectRoles(): Collection
+    {
+        return $this->userProjectRoles;
+    }
+
+    public function addUserProjectRole(UserProjectRole $userProjectRole): self
+    {
+        if (!$this->userProjectRoles->contains($userProjectRole)) {
+            $this->userProjectRoles[] = $userProjectRole;
+            $userProjectRole->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserProjectRole(UserProjectRole $userProjectRole): self
+    {
+        if ($this->userProjectRoles->contains($userProjectRole)) {
+            $this->userProjectRoles->removeElement($userProjectRole);
+            // set the owning side to null (unless already changed)
+            if ($userProjectRole->getUser() === $this) {
+                $userProjectRole->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Company[]
+     */
+    public function getCreatedCompanies(): Collection
+    {
+        return $this->created_companies;
+    }
+
+    public function addCreatedCompany(Company $createdCompany): self
+    {
+        if (!$this->created_companies->contains($createdCompany)) {
+            $this->created_companies[] = $createdCompany;
+            $createdCompany->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedCompany(Company $createdCompany): self
+    {
+        if ($this->created_companies->contains($createdCompany)) {
+            $this->created_companies->removeElement($createdCompany);
+            // set the owning side to null (unless already changed)
+            if ($createdCompany->getCreatedBy() === $this) {
+                $createdCompany->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Plate[]
+     */
+    public function getPlates(): Collection
+    {
+        return $this->plates;
+    }
+
+    public function addPlate(Plate $plate): self
+    {
+        if (!$this->plates->contains($plate)) {
+            $this->plates[] = $plate;
+            $plate->setUserCreate($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlate(Plate $plate): self
+    {
+        if ($this->plates->contains($plate)) {
+            $this->plates->removeElement($plate);
+            // set the owning side to null (unless already changed)
+            if ($plate->getUserCreate() === $this) {
+                $plate->setUserCreate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlateMatrix[]
+     */
+    public function getPlateMatrices(): Collection
+    {
+        return $this->plateMatrices;
+    }
+
+    public function addPlateMatrix(PlateMatrix $plateMatrix): self
+    {
+        if (!$this->plateMatrices->contains($plateMatrix)) {
+            $this->plateMatrices[] = $plateMatrix;
+            $plateMatrix->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlateMatrix(PlateMatrix $plateMatrix): self
+    {
+        if ($this->plateMatrices->contains($plateMatrix)) {
+            $this->plateMatrices->removeElement($plateMatrix);
+            // set the owning side to null (unless already changed)
+            if ($plateMatrix->getUser() === $this) {
+                $plateMatrix->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlatePatern[]
+     */
+    public function getPlatePaterns(): Collection
+    {
+        return $this->platePaterns;
+    }
+
+    public function addPlatePatern(PlatePatern $platePatern): self
+    {
+        if (!$this->platePaterns->contains($platePatern)) {
+            $this->platePaterns[] = $platePatern;
+            $platePatern->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatePatern(PlatePatern $platePatern): self
+    {
+        if ($this->platePaterns->contains($platePatern)) {
+            $this->platePaterns->removeElement($platePatern);
+            // set the owning side to null (unless already changed)
+            if ($platePatern->getUser() === $this) {
+                $platePatern->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlatePaternMatrix[]
+     */
+    public function getPlatePaternMatrices(): Collection
+    {
+        return $this->platePaternMatrices;
+    }
+
+    public function addPlatePaternMatrix(PlatePaternMatrix $platePaternMatrix): self
+    {
+        if (!$this->platePaternMatrices->contains($platePaternMatrix)) {
+            $this->platePaternMatrices[] = $platePaternMatrix;
+            $platePaternMatrix->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatePaternMatrix(PlatePaternMatrix $platePaternMatrix): self
+    {
+        if ($this->platePaternMatrices->contains($platePaternMatrix)) {
+            $this->platePaternMatrices->removeElement($platePaternMatrix);
+            // set the owning side to null (unless already changed)
+            if ($platePaternMatrix->getUser() === $this) {
+                $platePaternMatrix->setUser(null);
             }
         }
 

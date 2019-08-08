@@ -10,6 +10,7 @@ namespace App\Controller;
 
 
 use App\Repository\CategoryRepository;
+use App\Repository\OldCategoryRepository;
 use App\Repository\OldProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProjectRepository;
@@ -70,5 +71,37 @@ class OldProductController extends AbstractController
         }
 
     }
+    /**
+     * @Route("/ajax/{project_id}/analitics/old_product/update_category", name="update_old_category",requirements={"project_id"="\d+", "old_product_id"="\d+"}, methods={"POST"})
+     */
+    public function update_old_category($project_id,
+                                        Request $request,
+                                        OldProductRepository $oldProductRepository,
+                                        OldCategoryRepository $oldCategoryRepository)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $data = json_decode($request->request->get('data'));
+        $data = json_decode(json_encode($data), true);
+
+        foreach ($data as $product_item){
+
+
+            $old_product = $oldProductRepository->findOneBy(['id'=>$product_item['id']]);
+            $future_old_category = $oldCategoryRepository->findOneBy(['id'=> $product_item['new_cat']]);
+
+
+            $old_product->setCategory($future_old_category);
+
+            $entityManager->persist($old_product);
+
+        }
+
+        $entityManager->flush();
+
+
+        return new Response(1);
+    }
+
 
 }

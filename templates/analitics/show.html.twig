@@ -1,33 +1,60 @@
 {% extends 'work.html.twig' %}
 
 {% block title %}Analitics{% endblock %}
-{% block headjs %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+    {{ encore_entry_link_tags('analitic_abc') }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('/js/jquery-tablesort-master/jquery.tablesort.js') }} "></script >
 {% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js" ></script >
+     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=zdf8cmj1zltd2sgzkhwl1zqfael594fvdn1wmnj5r4fsl8cw" ></script >
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+
+
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+     </script >
+ {% endblock %}
 {% block body %}
     <h1>Analitics</h1>
 
+
+<div id="abc">
+    <abc-page :upcategories="upcategories"
+              :mean_price="mean_price"
+              :val_vir="val_vir"
+              :val_ss="val_ss"
+              :products="products"
+              :product_category_type="product_category_type"
+              :selected_category="selected_category"
+              :analitic_id="analitic_id"
+              :loading="loading"
+              :all_categories="categories"
+              :components="components"
+              :project_id="app_state.project_id"
+    :categories_type="categoryType"></abc-page>
+</div>
 <div class='linecat'>
     <div class='sqv_discr' id='telo'>
-        <div class='line_cat_all'>
-            {% for category in categoryes %}
-                <label for='cat{{ category.id }}' onclick="swich_cat({{ project.id }},{{ analitic.id }},{{ category.id }})">{{ category.Name }}</label>
-                <input type='radio' name='cat_name' {% if old_category_id %}
-                    {% if (old_category_id == category.id) %}checked{% endif %}{% elseif loop.index==1  %}checked{% endif %} id='cat{{ category.id }}'>
-            {% endfor %}
-            <label for='cat_m{{ analitic.id }}'>Сводка</label>
-            <input type='radio' name='cat_name' id='cat_m{{ analitic.id }}' onclick='svodka({{ project.id }},{{ analitic.id }})'>
 
-
-        </div>
     </div>
     <div id="dialog-message" class='hide' title="Перенос блюд">
 
     </div>
-    <div class='new_str ' id='table'>
 
 
-        {{ include('analitics/_abc_table.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}
+        {% block tailjs %}
+        {{ encore_entry_script_tags('analitic_abc') }}
+
 
 {% endblock %}

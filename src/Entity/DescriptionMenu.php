@@ -41,6 +41,11 @@ class DescriptionMenu
      */
     private $date_create;
 
+    public function __construct() {
+        $this->setActive(true);
+        $this->setDateCreate(new \DateTime('now'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;

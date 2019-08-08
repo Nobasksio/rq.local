@@ -475,7 +475,7 @@ margin: 0 48px 25px 0px;
 	padding:5px 7px;
 	font-size:11px;
 	text-align:center;
-	max-width:100px;
+	max-width:150px;
 	border-top: 1px solid #d4d4d4;
 	border-left: 1px solid #f4f4f4;
 }
@@ -966,7 +966,6 @@ padding: 0 0 0 20px;
 }
 .blc_table_new_deg{
 	clear:left;
-	float:left;
 }
 .advice{
 	border: 1px solid #d4d4d4;
@@ -987,14 +986,14 @@ padding: 0 0 0 20px;
 .red{
 	color:#ff0000;
 }
-.close{
+.close-my{
 	float:right;
 	width:18px;
 	height:17px;
 	background: url(img/close.png) no-repeat;
 	cursor:pointer;
 }
-.close:hover{
+.close-my:hover{
 	background-position:0 -17px;
 }
 p{
@@ -1634,4 +1633,23 @@ display:none;
 .padding5{
 	padding: 25px;
 	font-size: 1.5em;
+}
+.load_blk{
+	opacity: 0.3;
+}
+.table-all{
+	font-size: 12px;
+}
+.icon_wrapper {
+	cursor: pointer;
+}
+.icon{
+	cursor: pointer;
+}
+.icon_wrapper:hover .icon {
+	stroke: #ff0c00;
+}
+.date_text{
+	font-size: 10px;
+	margin-top: -10px;
 }

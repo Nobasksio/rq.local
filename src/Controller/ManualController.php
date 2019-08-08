@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
-class ManualController extends AbstractController
+class ManualController extends BaseController
 {
     private $iikoCategoryRepository;
     private $arr_iiko_category;
@@ -79,11 +79,23 @@ class ManualController extends AbstractController
         foreach ($project->getIikoDepartment() as $iiko_department){
             $project_departments[] = array('id'=> $iiko_department->getId(),
                 'name'=>$iiko_department->getName());
-            if (count($iiko_department->getIikoCategories())>0) {
-                foreach( $iiko_department->getIikoCategories() as $category){
-                    $array_categories[] = $category;
-                }
-            }
+//            if (count($iiko_department->getIikoCategories())>0) {
+//                foreach( $iiko_department->getIikoCategories() as $category){
+//                    $array_categories[] = $category;
+//                }
+//            }
+        }
+
+        foreach ($project->getIikoCategories() as $category){
+            $array_categories[] = $category;
+        }
+
+        $array_iiko_test = [];
+        foreach ($array_categories as $category_item){
+            $array_iiko_test[] = [
+                'id'=>$category_item->getId(),
+                'name'=>$category_item->getName()
+            ];
         }
 
         $this->iikoCategoryRepository = $iikoCategoryRepository;
@@ -91,8 +103,8 @@ class ManualController extends AbstractController
         $this->CreateTree($array_categories);
 
 
-
         $check_array = [];
+
         foreach ($this->arr_iiko_category as $key => $iiko_category){
             if (!in_array($iiko_category['id'],$check_array)){
                 $check_array[] = $iiko_category['id'];
@@ -119,6 +131,7 @@ class ManualController extends AbstractController
             'types_product' => $types_product_array,
             'categories' => $categories_array,
             'selected_categoory' => $categories[0]->getId(),
+            'iiko_category' =>$array_iiko_test,
             'products' => $products_array,
             'subcategories' => $subcategories_array,
             'components' => $components_array,
@@ -143,20 +156,16 @@ class ManualController extends AbstractController
      */
     public function ajaxManualProoduct(Project $project,
                                        ProductRepository $productRepository,
-                                       TtkRepository $ttkRepository,
-                                       TtkComponentRepository $ttkComponentRepository,
-                                       PhotoRepository $photoRepository,
+                                       ComponentRepository $componentRepository,
+                                       FirstProduct $firstProduct,
                                        $product_id)
     {
 
-
-
         $product = $productRepository->findOneBy(['id' => $product_id]);
-
-        $response_arr = $this->get_product_info_array($product,$ttkRepository,$photoRepository, $ttkComponentRepository);
-
-        $json_respoonse = json_encode($response_arr);
-
+        $components = $componentRepository->findAll();
+        $components_array = $this->make_array($components);
+        $response_arr = $firstProduct->getProductInfoArray($product);
+        $json_respoonse = json_encode(['product' => $response_arr,'components'=>$components_array]);
         $response = JsonResponse::fromJsonString($json_respoonse);
 
         return $response;
@@ -169,15 +178,20 @@ class ManualController extends AbstractController
     public function ajaxManualCategory(Project $project,
                                        $category_id,
                                        FirstProduct $firstProduct,
+                                       ComponentRepository $componentRepository,
                                        CategoryRepository $categoryRepository)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
 
+        $components = $componentRepository->findAll();
+        $components_array = $this->make_array($components);
+
+
         $categoory = $categoryRepository->findOneBy(['id' => $category_id]);
         $response_arr = $firstProduct->getFirstProduct($categoory);
 
-        $json_respoonse = json_encode($response_arr);
+        $json_respoonse = json_encode(['product'=>$response_arr,'components'=>$components_array]);
 
         $response = JsonResponse::fromJsonString($json_respoonse);
 
@@ -185,96 +199,8 @@ class ManualController extends AbstractController
 
     }
 
-    public function make_array($entities_array){
-
-        $return_array = [];
-        foreach ($entities_array as $entity_item) {
-            $return_array[] = $entity_item->getArrayParam();
-        }
-
-        return $return_array;
-    }
-
-    public function get_product_info_array($product,
-                                           TtkRepository $ttkRepository,
-                                           PhotoRepository $photoRepository,
-                                           TtkComponentRepository $ttkComponentRepository){
-
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $response_arr = array('id' => $product->getId());
-        $response_arr['selected_category'] = $product->getCategory()->getId();
-        $subcategory = $product->getSubcategory();
-        if ($subcategory) {
-            $response_arr['selected_subcategory'] = $subcategory->getId();
-        } else {
-            $response_arr['selected_subcategory'] = "0";
-        }
-        $response_arr['name'] = $product->getNameWork();
-
-        if ($product->getType()) {
-            $response_arr['type'] = $product->getType()->getId();
-        } else {
-            $response_arr['type'] = "0";
-        }
-
-        $photos = $photoRepository->findBy(['product'=>$product, 'type'=>5,'status'=>4],['date_create' => 'DESC']);
-        if (!$photos){
-            $photos = $photoRepository->findBy(['product'=>$product, 'type'=>1,'status'=>4]);
-        }
-        if ($photos) {
-            $photo = '/uploads/file/'.$photos[0]->getImg();
-        } else {
-            $photo = false;
-        }
-        $response_arr['photo'] = $photo;
-
-        $ttk = $ttkRepository->findOneBy(['product' => $product]);
-
-        if (!$ttk) {
-            $ttk = new Ttk();
-
-            $ttk->setProduct($product);
-            $entityManager->persist($ttk);
-            $entityManager->flush();
-        }
-
-        $response_arr['ttk_num'] = $ttk->getNumber();
-        if ($ttk->getNumber() == null) {
-            $response_arr['ttk_num'] = '';
-        }
-
-        $response_arr['comment'] = $ttk->getComment();
-        if ($ttk->getComment() == null) {
-            $response_arr['comment'] = '';
-        }
-        $response_arr['technology'] = $ttk->getTechnology();
-        if ($ttk->getTechnology() == null) {
-            $response_arr['technology'] = '';
-        }
-
-        $Components = $ttkComponentRepository->findBy(['Ttk' => $ttk]);
 
 
-        $response_arr['components'] = array();
-        foreach ($Components as $component_item) {
-            $component = $component_item->getComponent();
-            $measure = $component_item->getMeasure();
-            $count = $component_item->getCount();
-
-            $response_arr['components'][] = array(
-                'component_name' => $component->getName(),
-                'component_id' => $component->getId(),
-                'measure' => $measure->getId(),
-                'measure_name' => $measure->getName(),
-                'count' => $count
-
-            );
-
-        }
-
-        return $response_arr ;
-    }
     function CreateTree($array_categories)
     {
         //asort($array);

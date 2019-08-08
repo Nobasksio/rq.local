@@ -13,7 +13,9 @@ use App\Entity\Project;
 use App\Entity\Subcategory;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Utility\FirstProduct;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -93,6 +95,31 @@ class CategoryController extends AbstractController
         $entityManager->flush();
 
         return new Response(1);
+    }
+
+    /**
+     * @Route("ajax/{id}/category/{category_id}/all_product", name="all_product", methods={"GET","POST"})
+     */
+    public function show(Project $project,
+                         $category_id,
+                         FirstProduct $firstProduct,
+                         ProductRepository $productRepository,
+                         CategoryRepository $categoryRepository): Response
+    {
+        $Category = $categoryRepository->findOneBy(['id'=>$category_id]);
+        $products = $productRepository->findBy(['category' => $Category, 'old_status' => 2]);
+        $products_array =[];
+        foreach ($products as $product_item){
+            $products_array[] = $firstProduct->getProductInfoArray($product_item);
+        }
+
+        $app_state = json_encode([
+            'products' => $products_array,
+        ]);
+
+        $response = JsonResponse::fromJsonString($app_state);
+
+        return $response;
     }
 
     /**
