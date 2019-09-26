@@ -24,7 +24,8 @@ new Vue({
             selected_departments:app_state.project_departments,
         },
         link:null,
-        show_link:false
+        show_link:false,
+        loading:false,
 
     },
     methods: {
@@ -33,16 +34,18 @@ new Vue({
             this.degustation.products = makeForRadio(this.degustation.products);
         },
         requestIiko(){
-            this.uploading = true
+            this.loading = true
             let analitic_setting = JSON.stringify(this.analitic_setting);
             axios.post('/ajax/project/'+ this.app_state.project_id +'/analitics/download',
                 "analitic_setting=" + analitic_setting
             ).then(response => {
                 this.link = response.data.analitic_id;
                 this.show_link = true;
+                this.loading = false;
 
             }).catch(function (error) {
                 console.log('FAILURE!!');
+                this.loading = false;
 
             });
         }

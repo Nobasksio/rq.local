@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Plate;
+use App\Entity\Product;
+use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -18,6 +20,17 @@ class PlateRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Plate::class);
     }
+
+//    public function findByProject(Project $project)
+//    {
+//        return $this->createQueryBuilder('p')
+//            ->from('plate');
+//            ->andWhere('p.project = :val')
+//            ->setParameter('val', $project->getId())
+//            ->getQuery()
+//            ->getResult()
+//            ;
+//    }
 
     // /**
     //  * @return Plate[] Returns an array of Plate objects

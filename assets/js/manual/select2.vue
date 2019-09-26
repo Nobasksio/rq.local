@@ -37,16 +37,11 @@
                 .on('change', function () {
                     vm.$emit('input', this.value)
                 });
-            console.log('mounted');
-            console.log('селект');
-            console.log(this.measures);
             this.nonchange = true;
         },
 
         watch: {
         measures: function(measures) {
-            console.log('test6');
-            console.log(measures);
             // update options
             // $(this.$el).empty().select2({
             //     data: measures,
@@ -57,16 +52,8 @@
                 let _this = this;
 
                 this.count++;
-                console.log('test1');
-                console.log(this.value);
-                console.log(value);
-                console.log(this.count);
                 if (value != '' & typeof value != "undefined" & value != 0) {
 
-                    console.log('test2');
-                    console.log(this.value);
-                    console.log(value);
-                    console.log(this.count);
 
                     let isComponent = false,
                         i = 0;
@@ -75,10 +62,6 @@
 
                         if (this.measures[i].id == value & value != '') {
 
-                            console.log('test21');
-                            console.log(this.value);
-                            console.log(value);
-                            console.log(this.count);
 
                             isComponent = true;
                             break;
@@ -86,10 +69,6 @@
 
                         if (this.measures[i].text == value & value != '') {
 
-                            console.log('test22');
-                            console.log(this.value);
-                            console.log(value);
-                            console.log(this.count);
 
                             isComponent = true;
                             break;
@@ -99,10 +78,6 @@
 
                     if (!isComponent) {
 
-                        console.log('test3');
-                        console.log(this.value);
-                        console.log(value);
-                        console.log(this.count);
 
                         let name_entity;
 
@@ -142,7 +117,7 @@
                                 this.$parent.$parent.product.selected_subcategory = response.data;
                                 this.$parent.visible2 = false;
                             } else if (this.type == 3) {
-                                console.log('myau3');
+
                                 this.$parent.$parent.$parent.product.components[this.key_m-1].component_id = response.data;
                                 this.$parent.$parent.$parent.product.components[this.key_m-1].component_name = this.value;
 
@@ -155,7 +130,7 @@
 
 
                             } else if (this.type == 5) {
-                                console.log('myau5');
+
                                 this.$parent.$parent.$parent.selected_component = response.data;
                                 this.$parent.visible3 = false;
 
@@ -173,14 +148,10 @@
                                 tags: true
                             });
 
-                            console.log('cosmos');
+
                         });
                     } else {
 
-                        console.log('test5');
-                        console.log(this.value);
-                        console.log(value);
-                        console.log(this.count);
 
                         if (this.type == 1) {
                             this.$parent.$parent.mainAlert = true;
@@ -197,10 +168,6 @@
 
                 }
 
-                console.log('ебаное значение появится сейчас');
-                console.log(this.value);
-                console.log(value);
-                console.log(this.count);
 
                 $(this.$el).val(value).trigger('change');
 
@@ -208,7 +175,6 @@
             }
         },
         destroyed: function destroyed() {
-            console.log('test7');
             $(this.$el).off().select2('destroy');
         }
     }

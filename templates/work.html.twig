@@ -85,7 +85,7 @@
         <span>Аналитика</span></a>
     <a href='{{ path('inginiring', {'project_id': project.id}) }}' class='menul $activ[2]'><span>Инжиниринг</span></a>
     <a href='{{ path('degustations', {'project_id': project.id}) }}' class='menul $activ[3]'><span>Дегустации</span></a>
-    {#<a href='plate_choice.php' class='menul $activ[4]'><span>Посуда</span></a>#}
+    <a href='{{ path('plate', {'id': project.id}) }}' class='menul $activ[4]'><span>Посуда</span></a>
     {#<a href='photoset_all.php' class='menul $activ[5]'><span>Фотосессии</span></a>#}
     {#<a href='check_all.php' class='menul $activ[6]'><span>Твёрдые данные</span></a>#}
 

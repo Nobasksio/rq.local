@@ -476,6 +476,7 @@ class Product extends EntityHelper
         $array_param = [];
 
         $array_param['edit'] = false;
+
         $array_param['povar'] = null;
         $array_param['scores'] = $this->getDegustationScores();
         foreach ($array as $name_property){

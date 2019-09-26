@@ -20,6 +20,7 @@ new Vue({
             app_state: window.app_state,
             categories: window.app_state.categories,
             project:app_state.project,
+            chosen_category: [],
             all_user:app_state.all_users
         }
     },

@@ -23,7 +23,7 @@ use App\Entity\Product;
 class OldProductController extends AbstractController
 {
     /**
-     * @Route("ajax/move_to_menu/{project_id}/{old_product_id}", name="move_to_menu",requirements={"project_id"="\d+", "old_product_id"="\d+"}, methods={"GET"})
+     * @Route("ajax/move_to_menu/{project_id}/{old_product_id}", name="move_to_menu_old",requirements={"project_id"="\d+", "old_product_id"="\d+"}, methods={"GET"})
      */
     public function toMenu($project_id, $old_product_id, ProductRepository $productRepository, OldProductRepository $oldProductRepository, ProjectRepository $projectRepository, CategoryRepository $categoryRepository){
 

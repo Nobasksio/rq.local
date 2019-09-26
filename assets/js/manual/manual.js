@@ -48,7 +48,7 @@ function makeValue(data) {
         obj.value = obj.id;
         obj.text = obj.name; // replace name with the property used for the text
 
-        return obj;
+        return obj;products
     });
     return data;
 }
@@ -137,7 +137,7 @@ new Vue({
             this.visibleC = true;
             this.selected_category = category_id;
             axios.get('/ajax/'+this.app_state.project_id+'/manual/category/' + this.selected_category).then(response => {
-                console.log(response.data);
+
                 let res_data = response.data;
 
                 if (res_data.id != 0) {

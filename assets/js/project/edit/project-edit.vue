@@ -46,6 +46,10 @@
 
                                  track-by="name" >
                     </multiselect >
+                    <b-button class="btn btn-primary my-3" @click="updateTtk" >
+                        Обновить это дерьмо
+                        <b-spinner type="grow" small v-show="loading_ttk" label="Loading..." ></b-spinner >
+                    </b-button ><br>
                     <label class="typo__label mt-3" >Маркетологи</label >
                     <multiselect v-model="project.marketolog"
                                  :multiple="true"
@@ -120,10 +124,50 @@
         data: function () {
             return {
                 loading: false,
-                showgo: false
+                showgo: false,
+                loading_ttk:false
             }
         },
         methods: {
+            updateTtk(){
+                this.loading_ttk = true
+                let data_request = JSON.stringify({
+                    departments: this.choosed_departments,
+                    chosen_category: this.chosen_category,
+                    project: this.project
+                });
+
+                axios.post('/ajax/down_ttk',
+                    "data=" + data_request
+                ).then(response => {
+
+                    this.project.project_id = response.data.project_id;
+
+                    if (past_id == 0) {
+                        text = 'Проект успешно создан'
+                        this.showgo = true
+                    } else {
+                        text = 'Настройки проекта успешно сохранены'
+                    }
+                    this.$bvToast.toast(text, {
+                        title: 'Проект сохранен',
+                        autoHideDelay: 5000,
+                        variant: 'success',
+                        appendToast: true
+
+                    })
+                    this.loading_ttk = false
+
+                }).catch(error => {
+                    this.loading_ttk = false
+                    this.$bvToast.toast(`При сохранении проекта возникли проблемы`, {
+                        title: 'Ошибка сохранения',
+                        autoHideDelay: 5000,
+                        variant: 'danger',
+                        appendToast: true
+                    })
+                });
+            },
             saveProject: function () {
                 this.loading = true
                 let past_id = this.project.project_id

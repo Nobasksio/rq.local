@@ -61,6 +61,11 @@ class IikoTtkComponent
      */
     private $iiko_ttk;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_update;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -170,6 +175,18 @@ class IikoTtkComponent
     public function setIikoTtk(?IikoTtk $iiko_ttk): self
     {
         $this->iiko_ttk = $iiko_ttk;
+
+        return $this;
+    }
+
+    public function getDateUpdate(): ?\DateTimeInterface
+    {
+        return $this->date_update;
+    }
+
+    public function setDateUpdate(\DateTimeInterface $date_update): self
+    {
+        $this->date_update = $date_update;
 
         return $this;
     }

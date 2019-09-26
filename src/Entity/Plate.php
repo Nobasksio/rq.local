@@ -85,6 +85,9 @@ class Plate
 
     public function __construct()
     {
+        $this->setName('Новая посудина');
+        $this->setDateCreate(new \DateTime('now'));
+        $this->setIsDelete(false);
         $this->project = new ArrayCollection();
         $this->plateMatrices = new ArrayCollection();
         $this->plateProviders = new ArrayCollection();
@@ -335,5 +338,19 @@ class Plate
         }
 
         return $this;
+    }
+
+    public function getArrayParam($array = ['id','name','size','preview','full']){
+
+        $array_param = [];
+
+        $array_param['size'] = null;
+        foreach ($array as $name_property){
+            if (isset($this->$name_property)){
+                $array_param[$name_property] = $this->$name_property;
+            }
+        }
+        return $array_param;
+
     }
 }

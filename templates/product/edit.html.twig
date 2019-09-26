@@ -220,11 +220,9 @@
 
             </b-spinner>
         </div >
-        <div class="btn btn-danger float-right my-3" v-show="product.status==0" v-b-modal.modal-1>
-            Вернуть блюдо
-            <b-spinner small v-show="loading" type="grow">
+        <div class="btn btn-secondary float-right my-3 disabled" v-show="product.status==0" v-b-modal.modal-1>
+            Блюдо удалено
 
-            </b-spinner>
         </div >
         <b-modal id="modal-1" title="BootstrapVue" @ok="delProduct">
             <template slot="modal-title"

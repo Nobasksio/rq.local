@@ -71,7 +71,11 @@
             <b-alert variant="success" v-model="show_link" show >Данные успешно загружены</b-alert >
             <b-form-row class="mb-3" >
                 <b-col sm="3" >
-                    <b-button variant="primary mb-3" @click="requestIiko" >Получить</b-button >
+                    <b-button variant="primary mb-3" @click="requestIiko" >
+                        Получить
+                        <b-spinner small label="Small Spinner" v-show='loading' type="grow"></b-spinner>
+                    </b-button >
+
                 </b-col >
                 <b-col sm="2" >
                     <b-button v-show="show_link" variant="success mb-3" :href="link" >Перейти к отчету</b-button >
@@ -80,92 +84,70 @@
 
         </b-tab >
         <b-tab title="Загрузить файлом" >
+            <div class='' >
+                На этом этапе вы получите рекомендации о том что надо в меню заменить, наценить или попытаться повысить спрос.
+                Четкие рекомендации. Никакой воды.<br >
+                Скачайте шаблон и вставьте в него данные о продажах ваших блюд.
+            </div >
+            <div class='new_str center float' >
+                <a href='obrazec.csv' class='link_green' >
+                    <img src='{{ asset('img/download.png') }} ' >
+                    <div class='upload_name' >Скачать шаблон</div >
+                </a >
+            </div >
+            <div class='new_str center float' >
+                <div class='' >
+                    Введите период за который вы загружаете данные
+                </div >
+            </div >
+            {{ form_start(form,{'attr': {'id': 'analitics'}}) }}
+            <div class="new_str" >
+                <div class='name_input' >
+                    Введитеназвание отчета
+                </div >
+                {{ form_widget(form.name, {'attr': {'class': 'input_medium'}}) }}
 
+            </div >
+            <div class='new_str' >
+                <div class='float ' >
+
+                    <div class='name_input' >
+                        Начало периода
+                    </div >
+                    <div >
+                        {{ form_widget(form.date_start_str, {'attr': {'class': 'input_min date'}}) }}
+
+                    </div >
+
+                </div >
+
+                <div class='float st_pad' >
+                    <div class='name_input' >
+                        Конец периода
+                    </div >
+                    <div >
+                        {{ form_widget(form.date_finish_str, {'attr': {'class': 'input_min date'}}) }}
+                    </div >
+                </div >
+                <div class='help' ></div >
+            </div >
+            <div class='new_str ' >
+                <div class='pzag2' >
+                    Загрузите заполненный файл
+                </div >
+            </div >
+            <div class='new_str center float pointer' onclick="document.getElementById('analitics_file').click();" >
+                <img src='{{ asset('img/upload.png') }}' >
+                <div class='upload_name' ><a >Загрузить шаблон</a ></div >
+            </div >
+            {{ form_widget(form.file, {'attr': {'class': 'fileup'}}) }}
+            <div class='buton' onclick="document.getElementById('analitics').submit(); return false;" id='button' >
+                Bon voyage
+            </div >
+            {{ form_end(form) }}
         </b-tab >
     </b-tabs >
 </div >
 
 
-<div class='' >
-    На этом этапе вы получите рекомендации о том что надо в меню заменить, наценить или попытаться повысить спрос.
-    Четкие рекомендации. Никакой воды.<br >
-    Скачайте шаблон и вставьте в него данные о продажах ваших блюд.
-</div >
-<div class='new_str center float' >
-    <a href='obrazec.csv' class='link_green' >
-        <img src='{{ asset('img/download.png') }} ' >
-        <div class='upload_name' >Скачать шаблон</div >
-    </a >
-</div >
-<div class='new_str center float' >
-    <div class='' >
-        Введите период за который вы загружаете данные
-    </div >
-</div >
-{{ form_start(form,{'attr': {'id': 'analitics'}}) }}
-<div class="new_str" >
-    <div class='name_input' >
-        Введитеназвание отчета
-    </div >
-    {{ form_widget(form.name, {'attr': {'class': 'input_medium'}}) }}
 
-</div >
-<div class='new_str' >
-    <div class='float ' >
-
-        <div class='name_input' >
-            Начало периода
-        </div >
-        <div >
-            {{ form_widget(form.date_start_str, {'attr': {'class': 'input_min date'}}) }}
-
-        </div >
-
-    </div >
-
-    <div class='float st_pad' >
-        <div class='name_input' >
-            Конец периода
-        </div >
-        <div >
-            {{ form_widget(form.date_finish_str, {'attr': {'class': 'input_min date'}}) }}
-        </div >
-    </div >
-    <div class='help' ></div >
-</div >
-<div class='new_str ' >
-    <div class='pzag2' >
-        Загрузите заполненный файл
-    </div >
-</div >
-<div class='new_str center float pointer' onclick="document.getElementById('analitics_file').click();" >
-    <img src='{{ asset('img/upload.png') }}' >
-    <div class='upload_name' ><a >Загрузить шаблон</a ></div >
-</div >
-{{ form_widget(form.file, {'attr': {'class': 'fileup'}}) }}
-<div class='buton' onclick="document.getElementById('analitics').submit(); return false;" id='button' >
-    Bon voyage
-</div >
-{{ form_end(form) }}
-<div class='advice' id='advice' >
-    <div class='close' >
-    </div >
-    <div class='zag_advice' >
-        <span class='red' >!</span > Совет
-    </div >
-    <div >
-        <p >
-            Вы добавили в дегустацию уже больше 15 блюд.
-            По нашему опыту это не самая лучшая идея.
-        </p >
-        <p >
-            Во-первых на каждое блюдо у вас уйдет в лучшем случае около 5-7 минут. То есть порядка 1,5-2 часов.
-        </p >
-        <p >
-            А во-вторых ваши возможности организма не безграничны.
-            Больше 15 блюд попробовать даже по чуть-чуть за один раз очень тяжело
-            чисто физически, поэтому все остальные блюда скорее
-            всего получат либо не обьективную оценку либо
-        </p >
-    </div >
-</div >

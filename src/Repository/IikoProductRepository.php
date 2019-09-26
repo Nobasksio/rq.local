@@ -19,6 +19,16 @@ class IikoProductRepository extends ServiceEntityRepository
         parent::__construct($registry, IikoProduct::class);
     }
 
+    public function findIikoIdByCategories($categoies_id){
+
+        return $this->createQueryBuilder('i')
+            ->select('i.iiko_id')
+            ->andWhere('i.parent = :val')
+            ->setParameter('val', $categoies_id)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     // /**
     //  * @return IikoProduct[] Returns an array of IikoProduct objects
     //  */

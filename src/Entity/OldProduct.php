@@ -444,6 +444,12 @@ class OldProduct
         $array_param['category'] = ['id' => $this->getCategory()->getId(),
             'name' => $this->getCategory()->getName()];
 
+        if ($this->getProduct()){
+            $array_param['new_menu'] = true;
+        } else{
+            $array_param['new_menu'] = false;
+        }
+
         foreach ($array as $name_property){
             if (isset($this->$name_property)){
 

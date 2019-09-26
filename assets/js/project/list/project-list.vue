@@ -1,5 +1,7 @@
 <template >
     <b-row >
+        <my-toast order_id="123">
+        </my-toast>
         <b-modal id="modal-1" v-model="modalShow" title="Удаление проекта" @ok="deletproject">
             <p class="my-4">Вы уверены что хотите удалить этот проект? </p>
         </b-modal>

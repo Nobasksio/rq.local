@@ -26,6 +26,7 @@ use App\Repository\ProjectRepository;
 use App\Utility\iikoDownloadProduct;
 use App\Utility\iikoDownloadUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
@@ -492,8 +493,22 @@ class MainController extends AbstractController
     public function testDown4(iikoDownloadProduct $downloadProduct, ProjectRepository $projectRepository)
     {
 
-        $project = $projectRepository->findOneBy(['id' => 47]);
-        $count = $downloadProduct->saveTtk($project);
+        //$project = $projectRepository->findOneBy(['id' => 47]);
+        $count = $downloadProduct->saveTtk();
+        return $this->render('download.html.twig', ['count' => $count]);
+    }
+
+    /**
+     * @Route("ajax/down_ttk", name="ttk_category_down")
+     */
+    public function ttd_down(iikoDownloadProduct $downloadProduct, ProjectRepository $projectRepository, Request $request)
+    {
+
+        $data = json_decode($request->request->get('data'));
+        $data_array = json_decode(json_encode($data), true);
+        //$project = $projectRepository->findOneBy(['id' => 47]);
+
+        $count = $downloadProduct->saveTtk($data_array);
         return $this->render('download.html.twig', ['count' => $count]);
     }
 

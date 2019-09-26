@@ -30,6 +30,19 @@
         >
             Продуктовая матрица
         </b-button >
+        <b-button
+                :href="'/project/'+project_id+'/analitics_edit/'+analitic_id"
+                class="ml-1 mt-1"
+                size="sm">
+            Редактировать
+            <svg id="i-edit" class='icon' xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 32 32"
+                 width="20"
+                 height="20" fill="none" stroke="currentcolor" stroke-linecap="round"
+                 stroke-linejoin="round" stroke-width="2" >
+                <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+            </svg >
+        </b-button>
         <div > Категории</div >
         <b-button
                 v-for="(category, idx) in categories_type"
@@ -53,7 +66,6 @@
                 <span class='index' >{{ mean_price }}</span >
             </div >
         </div >
-
         <table class='table_order table' v-show="report_show" :class="{load_blk: loading}" border='0' cellpadding='0'
                cellspacing='0' >
             <thead >
@@ -76,8 +88,8 @@
                 <th class='tdz_ord_table' >Комментарии</th >
                 <th class='tdz_ord_table' >Взять в меню <span class='redact_grey_smal' id='all_check_span'
                                                               onclick='all_check()' >Отметить<br >все</span ></th >
-                <th class='tdz_ord_table' >Переделать</th >
-                <th class='tdz_ord_table' >Не учитывать<br > в расчетах</th >
+                <!--<th class='tdz_ord_table' >Переделать</th >-->
+                <!--<th class='tdz_ord_table' >Не учитывать<br > в расчетах</th >-->
             </tr >
             </thead >
             <tr class='tr_order2 ' v-for="(product_item, index) in products" >
@@ -125,9 +137,11 @@
                 <td class='td_ord_table_medium center' >
                     <br >
                 </td >
-                <td class='td_ord_table' ><input type='checkbox' class='check' ></td >
-                <td class='td_ord_table' ><input type='checkbox' class='remake' ></td >
-                <td class='td_ord_table' ><input type='checkbox' class='remake' ></td >
+                <td class='td_ord_table' >
+                    <b-form-checkbox v-model="product_item.new_menu" @change="change_state(product_item)"></b-form-checkbox>
+                </td >
+                <!--<td class='td_ord_table' ><input type='checkbox' class='remake' ></td >-->
+                <!--<td class='td_ord_table' ><input type='checkbox' class='remake' ></td >-->
             </tr >
         </table >
         <div v-show="matrix_show">
@@ -211,8 +225,70 @@
             project_id:Number,
             components: Array
         },
+    data: function () {
+        return {
+            svodka_show: false,
+            report_show:true,
+            array_change:[],
+            top: [],
+            selected:[],
+            looading_here: false,
+            fields: [
+                {
+                    key: 'index',
+                    label: '#',
+                    sortable: true
+                },
+                {
+                    key: 'name',
+                    label: 'Название',
+                    sortable: true
+                },
+                {
+                    key: 'val_vir',
+                    label: 'Выручка',
+                    sortable: true
+                },
+                {
+                    key: 'per_vir',
+                    label: '% Выручки',
+                    sortable: true
+                },
+                {
+                    key: 'sale',
+                    label: ' Продано шт',
+                    sortable: true,
+
+                }
+            ],
+            fields_matrix:[
+                {
+                    key: 'name',
+                    label: 'Название',
+                    sortable: true
+                },
+                {
+                    key: 'weight',
+                    label: 'вес',
+                    sortable: true
+                },
+                {
+                    key: 'unit',
+                    label: 'ед изм',
+                    sortable: true
+                },
+                {
+                    key: 'count',
+                    label: 'количество блюд которых используется',
+                    sortable: true
+                },
+            ],
+            matrix_show: false
+        }
+    },
         methods: {
             matrix:function(){
+                this.svodka_show = false;
                 this.matrix_show = true;
                 this.report_show = false;
                 this.$parent.product_category_type = 0;
@@ -221,6 +297,7 @@
             changeUpCategory: function (id) {
                 this.svodka_show = false;
                 this.matrix_show = false;
+                this.report_show = true;
                 this.$parent.product_category_type = id;
             },
             changeCategory: function (id) {
@@ -239,9 +316,9 @@
 
 
                 let data_request = JSON.stringify([{id:product_id, new_cat:searched_product.category.id}]);
-                console.log( this.looading_here);
+
                 this.looading_here = true;
-                console.log( this.looading_here);
+
                 axios.post('/ajax/'+ this.project_id +'/analitics/old_product/update_category',
                     "data=" + data_request
                 ).then(response => {
@@ -274,8 +351,38 @@
                 });
                 return category_return[0];
             },
+            change_state(product){
+
+                let data_request = JSON.stringify({id:product.id, state:!product.new_menu});
+                console.log('1')
+                console.log(product.new_menu)
+                axios.post('/ajax/'+ this.project_id +'/analitics/old_product/new_menu',
+                    "data=" + data_request
+                ).then(response => {
+
+                    if (product.new_menu) {
+                        this.$bvToast.toast('Блюдо ' + product.name + ' успешно перенесенов меню', {
+                            title: 'Блюдо перенесено',
+                            autoHideDelay: 5000,
+                            appendToast: true
+                        })
+                    }else {
+
+                        this.$bvToast.toast('Блюдо ' + product.name + 'теперь не будет в новом меню', {
+                            title: 'Категория удалено из нового меню',
+                            autoHideDelay: 5000,
+                            appendToast: true
+                        })
+                    }
+                    this.looading_here = false;
+
+                }).catch(function (error) {
+                    this.looading_here = false;
+                });
+            },
             svodka: function (analitic) {
                 this.svodka_show = true;
+                this.matrix_show = false;
                 this.report_show = false;
                 this.$parent.product_category_type = 0;
                 this.$parent.selected_category = 0;
@@ -365,65 +472,6 @@
                 })
             }
 
-        },
-        data: function () {
-            return {
-                svodka_show: false,
-                report_show:true,
-                top: [],
-                looading_here: false,
-                fields: [
-                    {
-                        key: 'index',
-                        label: '#',
-                        sortable: true
-                    },
-                    {
-                        key: 'name',
-                        label: 'Название',
-                        sortable: true
-                    },
-                    {
-                        key: 'val_vir',
-                        label: 'Выручка',
-                        sortable: true
-                    },
-                    {
-                        key: 'per_vir',
-                        label: '% Выручки',
-                        sortable: true
-                    },
-                    {
-                        key: 'sale',
-                        label: ' Продано шт',
-                        sortable: true,
-
-                    }
-                ],
-                fields_matrix:[
-                    {
-                        key: 'name',
-                        label: 'Название',
-                        sortable: true
-                    },
-                    {
-                        key: 'weight',
-                        label: 'вес',
-                        sortable: true
-                    },
-                    {
-                        key: 'unit',
-                        label: 'ед изм',
-                        sortable: true
-                    },
-                    {
-                        key: 'count',
-                        label: 'количество блюд которых используется',
-                        sortable: true
-                    },
-                ],
-                matrix_show: false
-            }
         },
         computed: {
             all_vir: function () {

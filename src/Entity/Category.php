@@ -52,11 +52,6 @@ class Category extends EntityHelper
     private $products;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $old_category;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $status;
@@ -79,12 +74,18 @@ class Category extends EntityHelper
      */
     private $m_id;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\OldCategory", inversedBy="category", cascade={"persist", "remove"})
+     */
+    private $old_category;
+
+
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->setDateCreate(new \DateTime('now'));
         $this->setType(1);
-        $this->setOldCategory(0);
         $this->setStatus(true);
         $this->setOldAmount(0);
         $this->setMovedAmount(0);
@@ -121,12 +122,12 @@ class Category extends EntityHelper
         return $this;
     }
 
-    public function getProjectId(): ?Project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProjectId(?Project $project): self
+    public function setProject(?Project $project): self
     {
         $this->project = $project;
 
@@ -176,17 +177,6 @@ class Category extends EntityHelper
         return $this;
     }
 
-    public function getOldCategory(): ?int
-    {
-        return $this->old_category;
-    }
-
-    public function setOldCategory(?int $old_category): self
-    {
-        $this->old_category = $old_category;
-
-        return $this;
-    }
 
     public function getStatus(): ?bool
     {
@@ -259,6 +249,8 @@ class Category extends EntityHelper
 
         $array_param = [];
 
+        $array_param['text'] = $this->getName();
+
         foreach ($array as $name_property){
             if (isset($this->$name_property)){
 
@@ -268,4 +260,18 @@ class Category extends EntityHelper
         return $array_param;
 
     }
+
+    public function getOldCategory(): ?OldCategory
+    {
+        return $this->old_category;
+    }
+
+    public function setOldCategory(?OldCategory $old_category): self
+    {
+        $this->old_category = $old_category;
+
+        return $this;
+    }
+
+
 }

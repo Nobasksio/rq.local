@@ -174,7 +174,7 @@
             </tr >
             <tr >
                 <td colspan="2" class="border p-3 font-8" >
-                    <textarea class="form-control" v-model="product.technology" >$[product.technology]</textarea >
+                    <textarea class="form-control" rows='4' v-model="product.technology" >$[product.technology]</textarea >
                 </td >
             </tr >
 

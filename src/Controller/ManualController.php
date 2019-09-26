@@ -79,11 +79,11 @@ class ManualController extends BaseController
         foreach ($project->getIikoDepartment() as $iiko_department){
             $project_departments[] = array('id'=> $iiko_department->getId(),
                 'name'=>$iiko_department->getName());
-//            if (count($iiko_department->getIikoCategories())>0) {
-//                foreach( $iiko_department->getIikoCategories() as $category){
-//                    $array_categories[] = $category;
-//                }
-//            }
+            if (count($iiko_department->getIikoCategories())>0) {
+                foreach( $iiko_department->getIikoCategories() as $category){
+                    $array_categories[] = $category;
+                }
+            }
         }
 
         foreach ($project->getIikoCategories() as $category){
@@ -145,6 +145,46 @@ class ManualController extends BaseController
         $html = $this->render('manual/index.html.twig', [
             'app_state' => addslashes($app_state),
             'project' =>$project
+        ]);
+
+        return $html;
+    }
+
+    /**
+     * @Route("/project/{id}/manual_down", name="manual_down")
+     */
+
+    public function manual_down(Project $project,
+                          CategoryRepository $cr,
+                          MeasureRepository $mr,
+                          SubcategoryRepository $sr,
+                          FirstProduct $firstProduct,
+                          ProductRepository $productRepository,
+                          TtkComponentRepository $ttkComponentRepository,
+                          IikoProductRepository $iikoProductRepository,
+                          IikoCategoryRepository $iikoCategoryRepository,
+                          TypeProductRepository $typeProductRepository,
+                          ComponentRepository $componentRepository)
+    {
+
+        $categories = $cr->findBy(['project' => $project, 'status' => true]);
+        $categories_array = $this->make_array($categories);
+
+        $products = $productRepository->findBy(['category' => $categories, 'old_status' => 2]);
+
+        foreach ($products as $product) {
+            $products_array[] = $firstProduct->getProductInfoArray($product);
+        }
+
+        $app_state = json_encode([
+            'selected_category' => $categories[0]->getId(),
+            'categories' =>$categories_array,
+            'products' => $products_array
+
+    ]);
+        $html = $this->render('manual/index_an.html.twig', [
+            'project' =>$project,
+            'app_state' => $app_state,
         ]);
 
         return $html;

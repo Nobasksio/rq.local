@@ -39,6 +39,9 @@ Encore
     .addEntry('analitic_edit', './assets/js/analitics/edit/edit.js')
     .addEntry('analitic_abc', './assets/js/analitics/abc/abc.js')
 
+    .addEntry('plate', './assets/js/plate/plate.js')
+    .addEntry('print', './assets/js/manual/print.js')
+
     .addEntry('company_create', './assets/js/company/create.js')
 
     .enableVueLoader()

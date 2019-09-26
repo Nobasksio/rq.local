@@ -78,6 +78,11 @@ class IikoTtk
      */
     private $netto_ttk;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_update;
+
     public function __construct()
     {
         $this->iikoTtkComponents = new ArrayCollection();
@@ -247,6 +252,18 @@ class IikoTtk
     public function setNettoTtk(?string $netto_ttk): self
     {
         $this->netto_ttk = $netto_ttk;
+
+        return $this;
+    }
+
+    public function getDateUpdate(): ?\DateTimeInterface
+    {
+        return $this->date_update;
+    }
+
+    public function setDateUpdate(\DateTimeInterface $date_update): self
+    {
+        $this->date_update = $date_update;
 
         return $this;
     }

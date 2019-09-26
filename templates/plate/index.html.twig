@@ -1,0 +1,48 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Ваша посуда{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+    {{ encore_entry_link_tags('plate') }}
+    {{ parent() }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js" ></script >
+     <script src="https://unpkg.com/vue-multiselect@2.1.0" ></script >
+     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css" >
+     <script >
+         window.app_state = JSON.parse('{{ app_state|raw }}');
+
+     </script >
+
+ {% endblock %}
+{% block body %}
+    <div class='zag1'>
+        Посудная матрица
+    </div>
+    <div class='pzag'>
+        Чтобы не заводить отдельную тарелку под каждое блюдо составьте матрицу и посмотрите сколько и какой посуды вам надо.
+    </div>
+<div id="plate_app">
+    <plate-page
+    :products="products"
+    :categories="categories"
+    :plates="plates"
+    :project_id="project_id"
+    >
+
+    </plate-page>
+</div>
+{% endblock %}
+
+{% block tailjs %}
+    {{ encore_entry_script_tags('plate') }}
+
+
+{% endblock %}

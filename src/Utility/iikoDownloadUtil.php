@@ -14,6 +14,7 @@ use App\Entity\IikoCategory;
 use App\Repository\DepartmentRepository;
 use App\Repository\IikoCategoryRepository;
 use App\Repository\IikoProductRepository;
+use App\Repository\IikoTtkComponentRepository;
 use App\Repository\IikoTtkRepository;
 use Curl\Curl;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -38,22 +39,28 @@ class iikoDownloadUtil
     protected $iikoCategoryRepository;
     protected $departmentRepository;
     protected $ittkr;
+    protected $ittk_componentr;
+    protected $myseting_place;
 
     public function __construct(SessionInterface $session,
                                 $targetDirectory,
+                                $myseting_place,
                                 EntityManagerInterface $em,
                                 IikoProductRepository $ipr,
                                 IikoCategoryRepository $iikoCategoryRepository,
                                 IikoTtkRepository $ittkr,
+                                IikoTtkComponentRepository $ittk_componentr,
                                 DepartmentRepository $departmentRepository)
     {
         $this->ipr = $ipr;
         $this->ittkr = $ittkr;
+        $this->ittk_componentr = $ittk_componentr;
         $this->departmentRepository = $departmentRepository;
         $this->iikoCategoryRepository = $iikoCategoryRepository;
         $this->session = $session;
         $this->em = $em;
         $this->targetDirectory = $targetDirectory;
+        $this->myseting_place = $myseting_place;
 
         $this->curl_object = new Curl();
         $old_hash = $this->session->get("key_hash");

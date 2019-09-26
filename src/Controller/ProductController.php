@@ -289,7 +289,7 @@ class ProductController extends BaseController
     }
 
     /**
-     * @Route("/ajax/{id}/product/update", name="update_product_ajax")
+     * @Route("/ajax/{id}/product/update_ttk", name="update_product_ajax", methods={"POST"})
      */
     public
     function updateProductTtkAjax(Project $project,
@@ -309,8 +309,10 @@ class ProductController extends BaseController
     {
 
 
-        $json = $request->query->get('product');
+        $json = $request->request->get('data');
         $product_info = json_decode($json);
+
+        $product_info = $product_info->product;
 
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -371,6 +373,7 @@ class ProductController extends BaseController
 
         $ttkCompoonents = $ttk->getTtkComponents();
         foreach ($ttkCompoonents as $ttkCompoonent) {
+//            $ttk->removeTtkComponent($ttkCompoonent);
             $entityManager->remove($ttkCompoonent);
         }
         $entityManager->persist($ttk);
@@ -389,9 +392,9 @@ class ProductController extends BaseController
 
             if (isset($component_item->iiko)) {
                 if (($component_item->iiko == true) or ($component_item->iiko == "true")) {
-                    $iiko_component = $iikoTtkComponentRepository->findOneBy(['id' => $component_id]);
+                    $iiko_component = $iikoProductRepository->findOneBy(['id' => $component_id]);
 
-                    $iiko_product_id = $iiko_component->getIikoProductId();
+                    $iiko_product_id = $iiko_component->getIikoId();
 
                     $component = $componentRepository->findOneBy(['iiko_id' => $iiko_product_id]);
 
@@ -460,16 +463,16 @@ class ProductController extends BaseController
         $iiko_product_id = $iiko_product_query->id;
         $iiko_product = $iikoProductRepository->findOneBy(['id' => $iiko_product_id]);
 
-        $ttk = $iikoTtkRepository->findOneBy(['iiko_product_id' => $iiko_product->getIikoId()]);
+        $ttk = $iikoTtkRepository->findBy(['iiko_product_id' => $iiko_product->getIikoId()],['date_from'=> 'Desc'],['limit'=>1]);
 
-        $ttk_komponents = $ttk->getIikoTtkComponents();
+        $ttk_komponents = $ttk[0]->getIikoTtkComponents();
 
         $arr_response = [];
 
 
         $arr_response = ['ttk_num' => $iiko_product->getNum(),
-            'technology' => $ttk->getApperance(),
-            'comment' => $ttk->getDescription() . ' ' . $ttk->getDescriptionSecond()
+            'technology' => $ttk[0]->getApperance(),
+            'comment' => $ttk[0]->getDescription() . ' ' . $ttk[0]->getDescriptionSecond()
         ];
 
         foreach ($ttk_komponents as $component_item) {

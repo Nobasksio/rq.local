@@ -7,6 +7,18 @@
 	src: url(../font/msb.otf);
 	}
 @font-face{
+	font-family:mm;
+	src: url(../font/mm.otf);
+}
+@font-face{
+	font-family:mebold;
+	src: url(../font/mebold.otf);
+}
+@font-face{
+	font-family:mblack;
+	src: url(../font/mblack.otf);
+}
+@font-face{
     font-family:sansb;
 	src: url(../PTC75F_W.ttf);
 	}
@@ -76,4 +88,16 @@ body{
 }
 .notactive{
 	opacity: 0.3;
+}
+.header_table{
+	height: 30px;
+	font-family: mblack;
+	background: #c9463a;
+	color:#ffffff;
+}
+.mebold{
+	font-family: mebold;
+}
+.component_ttk{
+	font-family: mm;
 }

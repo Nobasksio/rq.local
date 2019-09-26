@@ -26,11 +26,11 @@
                         ></photo-block>
                         </td >
                         <td class='td_ord_table left ' >{{ product_item.consist }}</td >
-                        <td class='td_ord_table left ' >{{ product_item.discriprion_menu }}</td >
+                        <td class='td_ord_table left ' >{{ product_item.description_menu }}</td >
                         <td class='td_ord_table left ' >{{ product_item.ves }}</td >
                         <td class='td_ord_table left ' >{{ product_item.cost_price }}</td >
                         <td class='td_ord_table left ' >{{ product_item.old_price }}</td >
-                        <td class='td_ord_table left ' >{{ product_item.new_price }}</td >
+                        <td class='td_ord_table left ' >{{ product_item.price }}</td >
                         <td class='td_ord_table left w120' >
                             <comment-block
                                     :product="product_item"
@@ -205,6 +205,11 @@
                 } else {
                     this.checkValid();
                 }
+            }
+        },
+        watch: {
+            selected_category(val) {
+                this.new_product.category_id = val;
             }
         },
         computed:{

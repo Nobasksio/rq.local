@@ -19,6 +19,25 @@ class IikoCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, IikoCategory::class);
     }
 
+    public function findIikoId($id){
+        return $this->createQueryBuilder('i')
+            ->select('i.iiko_id')
+            ->andWhere('i.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findIikoIdByIikoId($iiko_id){
+        return $this->createQueryBuilder('i')
+            ->select('i.iiko_id')
+            ->andWhere('i.parent = :val')
+            ->setParameter('val', $iiko_id)
+            ->getQuery()
+            ->getResult();
+    }
+
+
     // /**
     //  * @return IikoCategory[] Returns an array of IikoCategory objects
     //  */

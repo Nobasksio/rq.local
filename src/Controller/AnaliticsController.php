@@ -11,6 +11,7 @@ use App\Entity\OldCategory;
 use App\Entity\OldProduct;
 use App\Entity\Project;
 use App\Entity\TtkComponent;
+use App\Factory\ProductFactory;
 use App\Form\AnaliticsType;
 use App\Form\Analitics2Type;
 use App\Repository\AnaliticsRepository;
@@ -21,6 +22,7 @@ use App\Repository\IikoTtkRepository;
 use App\Repository\MeasureRepository;
 use App\Repository\OldCategoryRepository;
 use App\Repository\OldProductRepository;
+use App\Repository\ProductRepository;
 use App\Repository\ProjectRepository;
 use App\Utility\AnaliticsUtil;
 use App\Utility\FirstProduct;
@@ -284,6 +286,48 @@ class AnaliticsController extends BaseController
             'old_category_id' => false,
             'app_state' => $app_state
         ]);
+    }
+
+    /**
+     * @Route("/ajax/{project_id}/analitics/old_product/new_menu", name="move_to_menu",requirements={"project_id"="\d+"}, methods={"POST"})
+     */
+
+    public function updateStateNewMenu($project_id, Request $request,
+                                       OldProductRepository $oldProductRepository,
+                                       ProductFactory $productFactory,
+                                       ProductRepository $productRepository){
+
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $data = json_decode($request->request->get('data'));
+        $data = json_decode(json_encode($data), true);
+
+        $old_product = $oldProductRepository->findOneBy(['id'=>$data['id']]);
+
+        if ($old_product->getProduct()){
+            $product = $old_product->getProduct();
+        } else {
+            $product = $productFactory->createBasedOldProduct($old_product);
+        }
+
+        if ($data['state']) {
+            $product->setOldStatus(2);
+        } else {
+            $product->setOldStatus(0);
+        }
+
+        $old_product->setProduct($product);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($product);
+        $entityManager->persist($old_product);
+        $entityManager->flush();
+
+
+        $response = JsonResponse::fromJsonString(1);
+
+        return $response;
+
     }
 
     /**

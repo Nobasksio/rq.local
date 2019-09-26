@@ -42,6 +42,7 @@ class ProjectController extends BaseController
 
         $company_arr = [];
         $free_arr = [];
+        $projects_arr = [];
 
         $uniq_company_arr = [];
         // start bad solution sort project

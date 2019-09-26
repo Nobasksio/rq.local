@@ -87,6 +87,11 @@ class OldCategory
      */
     private $combine;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Category", mappedBy="old_category", cascade={"persist", "remove"})
+     */
+    private $category;
+
     public function __construct()
     {
         $this->oldProducts = new ArrayCollection();
@@ -318,6 +323,7 @@ class OldCategory
         $array_param['val_sale'] = $this->getValSale();
         $array_param['val_vir'] = $this->getValVir();
         $array_param['combine'] = null;
+        $array_param['text'] = $this->getName();
 
         $all_summ = 0;
         foreach ($this->getOldProducts() as $old_product) {
@@ -360,6 +366,24 @@ class OldCategory
     public function setCombine(?int $combine): self
     {
         $this->combine = $combine;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newOld_category = $category === null ? null : $this;
+        if ($newOld_category !== $category->getOldCategory()) {
+            $category->setOldCategory($newOld_category);
+        }
 
         return $this;
     }

@@ -1,0 +1,94 @@
+{% extends 'work.html.twig' %}
+
+{% block title %}Manual training{% endblock %}
+{% block css %}
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/manual.css') }}" >
+    {{ parent() }}
+    {{ encore_entry_link_tags('print') }}
+{% endblock %}
+ {% block headjs %}
+     {{ parent() }}
+     <script src="{{ asset('/js/es6-promise/dist/es6-promise.auto.min.js') }}" ></script >
+     <script src="{{ asset('/js/jspdf/dist/jspdf.min.js') }}" ></script >
+     <script src="{{ asset('/js/html2canvas/dist/html2canvas.min.js') }}" ></script >
+     <script src="{{ asset('/js/html2pdf.js/dist/html2pdf.js') }}" ></script >
+     {#<script src="ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>#}
+     <script >
+         window.app_state ={{ app_state|raw }};
+
+     </script >
+ {% endblock %}
+{% block body %}
+    <div class='zag1' >
+        Manual training
+    </div >
+    <div class='pzag' >
+        Одна из главных вещей, которая нужна чтобы получить то что хочешь — знать «что хочешь».<br >
+        На этом этапе мы сформируем проект нашего будущего меню Поймем какие будут категории, сколько в них блюд и в
+        каких ценовых категориях.
+
+    </div >
+    {% block menu_cat %}
+
+    {% endblock %}
+
+
+    <button type="button" class="btn btn-primary btn2" >скачать</button >
+    <div id="print_app">
+        <print-manual :app_state="app_state">
+
+        </print-manual >
+    </div >
+
+
+{% endblock %}
+
+
+
+
+
+{% block tailjs %}
+    {{ encore_entry_script_tags('print') }}
+
+    <script >
+
+        var element = document.getElementById('element-to-print');
+        var opt = {
+            margin: 10,
+            filename: 'myfile.pdf',
+            image: {type: 'jpeg', quality: 1},
+            pagebreak: {
+                mode: ['avoid-all', 'css'],
+
+            },
+            html2canvas: {scale: 4},
+            jsPDF: {unit: 'mm', format: 'a4', putOnlyUsedFonts: 'true', orientation: 'landscape'}
+        };
+        $('.btn2').click(function () {
+            html2pdf().set(opt).from(element).save();
+        });
+
+        function add_product_manual(category, project) {
+            $.ajax({
+                url: '/ajax/' + project + '/product/add',
+                type: "GET",
+                data: {
+                    "status": 1,
+                    "category": category,
+                    "project": project
+                },
+                success: function (data) {
+                    $("#ok_done2").show();
+                    $("#add_buut").attr('onclick', '');
+                    $("#add_buut").removeClass('buton_reg2');
+                    $("#add_buut").addClass('buton_grey');
+
+                }
+            })
+        }
+    </script >
+
+{% endblock %}

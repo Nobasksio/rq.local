@@ -162,11 +162,12 @@
 
                 this.visibleSave = true;
 
-                axios.get('/ajax/' + this.project_id + '/product/update', {
-                    params: {
-                        product: JSON.stringify(this.product)
-                    }
-                }).then(function (response) {
+                let data = JSON.stringify({
+                    product: this.product
+                })
+                axios.post('/ajax/' + this.project_id + '/product/update_ttk',
+                    "data=" + data
+                ).then(function (response) {
                     _this2.visibleSave = false;
                     _this2.dismissCountDown = _this2.dismissSecs
                     _this2.$parent.mainAlert = false;
@@ -189,7 +190,7 @@
                     this.visibleGetTTk = false;
 
                     let res_data = response.data;
-                    console.log(response.data);
+
                     this.$parent.product.comment = res_data.technology;
                     this.$parent.product.iiko_ttk = this.iiko_product;
 

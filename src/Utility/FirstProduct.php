@@ -102,6 +102,7 @@ class FirstProduct
             $response_arr['type'] = 0;
         }
 
+
         $response_arr['ves'] = $product->getWeight();
         $response_arr['cost_price'] = $product->getCostPrice();
 
@@ -115,6 +116,8 @@ class FirstProduct
             $name_menu_str = null;
         }
         $response_arr['name_menu'] = $name_menu_str;
+
+        $response_arr['plates'] = [];
 
         $description_menu = $this->descriptionMenuRepository->findOneBy(['Product'=>$product,'active'=>true]);
 
@@ -215,9 +218,10 @@ class FirstProduct
                 ];
         }
 
-        $response_arr['technology'] = preg_replace("/[^A-Za-z0-9]/", "", $ttk->getTechnology());
+        $response_arr['technology'] = str_replace(array("\r\n", "\r", "\n","\t"), '', $ttk->getTechnology());
+        $response_arr['technology'] = preg_replace('/[^a-zA-Zа-яА-Я0-9\s]/ui', '',$response_arr['technology']);
         //$response_arr['technology'] = $ttk->getTechnology();
-        if ($ttk->getTechnology() == null) {
+        if ($response_arr['technology'] == null) {
             $response_arr['technology'] = '';
         }
 
@@ -237,7 +241,7 @@ class FirstProduct
             }
             $response_arr['consist'] .= $delimetr.$component->getName();
             $response_arr['components'][] = array(
-                'name' => $component->getName(),
+                'name' => $response_arr['consist'] = preg_replace('/[^a-zA-Zа-яА-Я0-9\s]/ui','',$component->getName()),
                 'id' => $component->getId(),
                 'measure' => $measure->getId(),
                 'measure_name' => $measure->getName(),
@@ -245,9 +249,13 @@ class FirstProduct
             );
         }
 
+
         if ($response_arr['consist'] == ''){
             $response_arr['consist'] = $product->getConsist();
         }
+
+        $response_arr['consist'] = preg_replace('/[^a-zA-Zа-яА-Я0-9\s]/ui', '',$response_arr['consist'] );
+//        $response_arr['consist'] = '';
 
         return $response_arr;
     }
